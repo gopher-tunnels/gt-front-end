@@ -15,9 +15,9 @@
 ## Core Technology Stack
 | Technology | Description | Use |
 | -- | -- | -- |
-| [React Native]() |  | | 
-| [TypeScript]() |  | | 
-| [ExpressJS]() |  | | 
-| [MySQL]() |  | | 
+| [React Native](https://reactnative.dev/) |  | | 
+| [TypeScript](https://www.typescriptlang.org/) |  | | 
+| [ExpressJS](https://expressjs.com/) |  | | 
+| [MySQL](https://www.mysql.com/) |  | | 
 
 ## Setup
