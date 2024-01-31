@@ -15,9 +15,13 @@
 ## Core Technology Stack
 | Technology | Description | Use |
 | -- | -- | -- |
-| [React Native](https://reactnative.dev/) |  | | 
-| [TypeScript](https://www.typescriptlang.org/) |  | | 
-| [ExpressJS](https://expressjs.com/) |  | | 
-| [MySQL](https://www.mysql.com/) |  | | 
+| [React Native](https://reactnative.dev/) | User Interface Framework | Runtime | 
+| [TypeScript](https://www.typescriptlang.org/) | Language | Runtime | 
+| [ExpressJS](https://expressjs.com/) | Core Framework | Runtime | 
+| [MySQL](https://www.mysql.com/) | Storage | | 
 
+## Check out sources
+```
+git clone https://github.com/gopher-tunnels/gt-front-end
+```
 ## Setup
