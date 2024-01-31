@@ -1,7 +1,7 @@
 # Gopher Tunnels Front-End
   Welcome to the Front End repository for Gopher Tunnels
 ## Dependencies
-  * [NodeJS Latest Version](https://nodejs.org/en)
+  * [NodeJS](https://nodejs.org/en)
   * [Git](https://git-scm.com/downloads)
   * [ExpressJS](https://expressjs.com/en/starter/installing.html)
 ## Key URLS For Reference
