@@ -20,8 +20,39 @@
 | [ExpressJS](https://expressjs.com/) | Core Framework | Runtime | 
 | [MySQL](https://www.mysql.com/) | Storage | | 
 
-## Check out sources
-```
-git clone https://github.com/gopher-tunnels/gt-front-end
-```
 ## Setup
+1. Install NodeJS and Git
+  * First install NodeJS and Node Package Manager (npm)
+  * Install the lastest version of Git, Links: [Windows]("https://git-scm.com/download/win"), [macOS]("https://git-scm.com/download/mac")
+  * Log into Git inside your code editor (VSCode, VIM, etc.)
+
+2. Navigate to your desired folder location and run the command to clone the repository into your local machine
+```
+git clone https://github.com/gopher-tunnels/gt-front-end.git
+```
+3. Then run the following command to install all dependencies:
+```
+npm install
+```
+4. Now check which branch you are on using the following command, it should show all branches with a * on main:
+```
+git branch
+```
+Example:
+```
+*main
+branch2
+branch3
+branch4
+```
+5. Navigate to a branch other than main!
+```
+git switch placeholderBranch
+git pull
+```
+6. Run the following command:
+```
+npx expo
+```
+You should see a QR code pop up along with a list of commands from Expo if you configured yourself correctly
+7. Congratulations, your environment is setup!
