@@ -55,4 +55,5 @@ git pull
 npx expo
 ```
 You should see a QR code pop up along with a list of commands from Expo if you configured yourself correctly
+
 7. Congratulations, your environment is setup!
