@@ -18,6 +18,7 @@ jobs:
           reviewers: |
             VicHofs
             limetheman
+          numberOfAssignees: 1
           assignees: gopher-tunnels/front-end
           excludeLabels: |
             reading
