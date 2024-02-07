@@ -21,7 +21,9 @@ export default function Home() {
       />
       <CustomButton
         title="Toggle"
-        onPress={() => { pressed ? setPressed(false) : setPressed(true); Alert.alert(text)}}
+        onPress={() => { pressed ?
+          setPressed(false) : setPressed(true);
+          Alert.alert(text)}}
       />
     </View>
   );
