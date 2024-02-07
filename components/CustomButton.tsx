@@ -17,7 +17,11 @@ export interface Props {
 
 
 const CustomButton : React.FC<Props> = (props : Props) => {
-    const { onPress, title = "Default button"} = props;
+    const { 
+        onPress,
+        title = "Default button",
+    } = props;
+    
     return (
         <TouchableOpacity
             style={styles.button}

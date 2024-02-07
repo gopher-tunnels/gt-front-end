@@ -25,7 +25,7 @@ const CustomInput : React.FC<Props> = (props : Props) => {
         inputHead= "text",
         placeholder = "Default Placeholder",
         defaultValue = "",
-    } = props
+    } = props;
     
     return (
         <View style={styles.container}>
