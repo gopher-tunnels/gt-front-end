@@ -14,12 +14,19 @@ import {
 export interface Props {
     placeholder: string;
     inputHead: string;
-    onChangeText(): void;
+    defaultValue: string;
+    onChangeText(text: string) : void;
 }
 
 
 const CustomInput : React.FC<Props> = (props : Props) => {
-    const {onChangeText, inputHead= "text", placeholder = "Default Placeholder"} = props
+    const {
+        onChangeText,
+        inputHead= "text",
+        placeholder = "Default Placeholder",
+        defaultValue = "",
+    } = props
+    
     return (
         <View style={styles.container}>
             <Text style={styles.inputHeader}>{inputHead}</Text>
@@ -27,6 +34,7 @@ const CustomInput : React.FC<Props> = (props : Props) => {
                 style= {styles.input}
                 placeholder={placeholder}
                 onChangeText={onChangeText}
+                defaultValue= {defaultValue}
             />
         </View>
     );
