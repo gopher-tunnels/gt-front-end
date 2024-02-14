@@ -10,6 +10,12 @@ import {
     TextInput, 
 } from "react-native";
 
+import {
+    Container,
+    InputHeader,
+    InputText,
+} from './styles'
+
 
 export interface Props {
     placeholder: string;
@@ -28,32 +34,16 @@ const CustomInput : React.FC<Props> = (props : Props) => {
     } = props;
     
     return (
-        <View style={styles.container}>
-            <Text style={styles.inputHeader}>{inputHead}</Text>
-            <TextInput 
-                style= {styles.input}
+        <Container>
+            <InputHeader>{inputHead}</InputHeader>
+            <InputText 
                 placeholder={placeholder}
                 onChangeText={onChangeText}
                 defaultValue= {defaultValue}
             />
-        </View>
+        </Container>
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        width: 300
-    },
-    inputHeader: {
-        fontWeight:"600"
-    },
-    input: {
-        borderColor: "gray",
-        width: "100%",
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 10,
-    }
-});
 
 export default CustomInput;
