@@ -10,26 +10,21 @@ import {
 } from "react-native";
 
 import {
-    Container,
-    ButtonText,
+    // style imports go here
 } from './styles';
 
 export interface Props {
-    onPress(): void;
-    title : string;
+ // Define your prop types here
 }
 
 
 const CustomButton : React.FC<Props> = (props : Props) => {
     const { 
-        onPress,
-        title = "Default button",
+        // put all of your intended props here
     } = props;
     
     return (
-        <Container onPress={onPress}>
-            <ButtonText>{title}</ButtonText>
-        </Container>
+        <View></View> // Change chis as you see fit
     );
 };
 

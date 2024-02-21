@@ -11,37 +11,22 @@ import {
 } from "react-native";
 
 import {
-    Container,
-    InputHeader,
-    InputText,
+    // Style imports go here
 } from './styles'
 
 
 export interface Props {
-    placeholder: string;
-    inputHead: string;
-    defaultValue: string;
-    onChangeText(text: string) : void;
+    // Define your prop types here
 }
 
 
 const CustomInput : React.FC<Props> = (props : Props) => {
     const {
-        onChangeText,
-        inputHead= "text",
-        placeholder = "Default Placeholder",
-        defaultValue = "",
+        // Define your props here
     } = props;
     
     return (
-        <Container>
-            <InputHeader>{inputHead}</InputHeader>
-            <InputText 
-                placeholder={placeholder}
-                onChangeText={onChangeText}
-                defaultValue= {defaultValue}
-            />
-        </Container>
+        <View></View> // Change this as you see fit
     );
 };
 
