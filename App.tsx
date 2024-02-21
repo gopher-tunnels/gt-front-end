@@ -4,9 +4,10 @@ import Home from './app/Home';
 
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      <Home/>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Text>Gopher Tunnels</Text>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 

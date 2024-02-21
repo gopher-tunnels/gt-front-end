@@ -34,8 +34,9 @@ git clone https://github.com/gopher-tunnels/gt-front-end.git
 ```
 npm install
 ```
-4. Now check which branch you are on using the following command, it should show all branches with a * on main:
+4. Now git pull and check which branch you are on using the following command, it should show all branches with a * on main:
 ```
+git pull
 git branch
 ```
 Example:
