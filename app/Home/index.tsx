@@ -51,7 +51,7 @@ export default function Home() {
     }
     getLocation();
 
-    const interval = setInterval(getLocation, 10000);
+    const interval = setInterval(getLocation, 1000);
     return () => clearInterval(interval);
   }, []);
 
@@ -81,18 +81,18 @@ export default function Home() {
       showsUserLocation={true}
       showsMyLocationButton={true}
       userInterfaceStyle="dark"
+      loadingBackgroundColor="red"
+      loadingIndicatorColor="red"
       >
-        {location && (
-          <Marker coordinate={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+      {location && (
+        <Marker coordinate={{
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
         }}
         rotation={heading || 0}
       >
       </Marker>
-        )
-        
-        }
+        )}
       </Map>
       <Text>Current latitude: {region.latitude}</Text>
       <Text>Current longitude: {region.longitude}</Text>
