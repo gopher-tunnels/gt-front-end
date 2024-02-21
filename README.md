@@ -48,7 +48,7 @@ branch4
 ```
 5. Navigate to a branch other than main!
 ```
-git switch placeholderBranch
+git switch dev
 git pull
 ```
 6. Run the following command:
