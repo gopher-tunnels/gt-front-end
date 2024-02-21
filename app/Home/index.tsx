@@ -54,6 +54,7 @@ export default function Home() {
     const interval = setInterval(getLocation, 10000);
     return () => clearInterval(interval);
   }, []);
+
   useEffect(() => {
     const getHeading = async () => {
       try {
@@ -79,6 +80,7 @@ export default function Home() {
       onRegionChangeComplete={(region) => {setRegion(region)}}
       showsUserLocation={true}
       showsMyLocationButton={true}
+      userInterfaceStyle="dark"
       >
         {location && (
           <Marker coordinate={{
@@ -87,7 +89,6 @@ export default function Home() {
         }}
         rotation={heading || 0}
       >
-
       </Marker>
         )
         
