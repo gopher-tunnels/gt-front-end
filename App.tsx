@@ -5,8 +5,7 @@ import Home from './app/Home';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Gopher Tunnels</Text>
-      <StatusBar style="auto" />
+      <Home></Home>
     </View>
   );
 }
