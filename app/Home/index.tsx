@@ -121,10 +121,10 @@ export default function Home() {
           <Text>Focus to Current Location</Text>
         </TouchableOpacity>
       )}
-      <Text>heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}</Text>
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}</Text>
     
-      <Text>Current latitude: {region.latitude}</Text>
-      <Text>Current longitude: {region.longitude}</Text>
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>Current latitude: {region.latitude}</Text>
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>Current longitude: {region.longitude}</Text>
     </Container>
   );
 };
