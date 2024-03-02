@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker } from "react-native-maps";
+import React, { useState, useEffect, useRef } from "react";
+import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import LocationButton from "../../components/LocationButton";
 import { LocationObject as LocationObjectLocation, requestForegroundPermissionsAsync as requestForegroundPermissionsAsyncLocation, watchHeadingAsync as watchHeadingAsyncLocation, LocationSubscription as LocationSubscriptionLocation } from 'expo-location';
@@ -8,9 +8,10 @@ import { DeviceMotion } from 'expo-sensors';
 
 import { 
   Container,
-  Map
+  Map,
+  LocButton
 } from './styles'
-
+import Splash from "../Splash";
 
 
 
@@ -28,60 +29,54 @@ export default function Home() {
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
-  const [orientation, setOrientation] = useState<number | null>(null); // Sttate to get the current heading position
+  const [heading, setHeading] = useState<number | null>(null); // Sttate to get the current heading position
   const [errorMsg, setErrorMsg] = useState<string | null>(null); // State to track errors
   const [zoomLevel, setZoomLevel] = useState(0); // State to track zoom level
   const [markerSize, setMarkerSize] = useState(56);
-  const [rotation, setRotation] = useState(0);
-
-  useEffect(() => {
-    const getLocation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted'){
-        setErrorMsg('Location permissions denied');
-        return;
-      }
-      try {
-        const currentLocation = await Location.getCurrentPositionAsync({});
-        setLocation(currentLocation);
-      } catch (error) {
-        setErrorMsg('Error getting current location')
-      }
-    }
-    getLocation();
-
-    const interval = setInterval(getLocation, 1);
-    return () => clearInterval(interval);
-  }, []);
-
-
-  useEffect(() => {
-    const startWatchingOrientation = async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        console.log('Permission to access sensors was denied');
-        return;
-      }
-
-      DeviceMotion.addListener(({rotation}) => {
-        const radToDeg = 180 / Math.PI;
-        const angle = Math.atan2(rotation.gamma, rotation.beta) * radToDeg;
-        setOrientation(angle);
+  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
+  const mapRef = useRef<any>();
+  
+  const focusMap = () => {
+    if (location) {
+      const { latitude, longitude } = location.coords;
+      mapRef.current.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
       });
     };
+  };
 
-    startWatchingOrientation();
 
-    return () => {
-      DeviceMotion.removeAllListeners();
+  useEffect(() => {
+    const getLocationAndHeading = async () => {
+      try {
+        const { status: permissionStatus } = await Location.requestForegroundPermissionsAsync();
+        if (permissionStatus !== 'granted') {
+          console.log('Location permission not granted');
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+
+        Location.watchHeadingAsync(newHeading => {
+          setHeading(newHeading.trueHeading);
+        });
+      } catch (error) {
+        console.error('Error getting location and heading:', error);
+      }
     };
+
+    getLocationAndHeading();
+
   }, []);
 
 
   const handleRegionChange = (newRegion: any) => {
     // Calculate zoom level based on latitudeDelta
     const newZoomLevel = Math.log2(360 / newRegion.longitudeDelta);
-    console.log(markerSize);
     setMarkerSize(Math.pow(1.6, zoomLevel) / 20);
     setZoomLevel(newZoomLevel);
     setRegion(newRegion);
@@ -89,8 +84,8 @@ export default function Home() {
 
   
   if (!location) {
-    return <Text>Loading...</Text>
-  }
+    return <Splash/>
+  } 
 
   return (
     <Container>
@@ -103,25 +98,33 @@ export default function Home() {
       showsMyLocationButton={false}
       showsBuildings={true}
       userInterfaceStyle="light"
+      provider={PROVIDER_GOOGLE}
+
+      ref={mapRef}
       >
       {location && (
-        <Marker coordinate={{
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-        }}
-        rotation={orientation || 0} // Set the rotation of the marker based on the user's heading
-        anchor={{ x: 0.5, y: 0.5 }} // Adjust anchor to center of marker
-        centerOffset={{ x: 0, y: 0 }} // Adjust centerOffset based on marker size
-        calloutOffset={{ x: 0, y: 0 }} // Adjust calloutOffset based on marker size
+        <LocButton 
+          coordinate={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          }}
+          rotation={heading || 0} // Set the rotation of the marker based on the user's heading
+          onPress={focusMap}
+          calloutAnchor={{x: 0.8, y : 0.5}}
       > 
         <LocationButton width={markerSize} height={markerSize}/>
-      </Marker>
+      </LocButton>
         )}
-
       </Map>
-      <Text>Current latitude: {region.latitude}</Text>
-      <Text>Current longitude: {region.longitude}</Text>
-      <Text>Bruh</Text>
+      {location && (
+        <TouchableOpacity onPress={focusMap} style={{ position: 'absolute', bottom: 20, right: 20, backgroundColor: 'white', padding: 10, borderRadius: 10 }}>
+          <Text>Focus to Current Location</Text>
+        </TouchableOpacity>
+      )}
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}</Text>
+    
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>Current latitude: {region.latitude}</Text>
+      <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>Current longitude: {region.longitude}</Text>
     </Container>
   );
 };
