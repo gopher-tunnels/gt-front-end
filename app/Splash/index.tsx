@@ -8,7 +8,7 @@ export default function Splash () {
 
     return (
         <Container>
-            <SplashIcon iconWidth={width * 0.8} iconHeight={height * 0.8}/>
+            <SplashIcon iconWidth={width * 0.6} iconHeight={height * 0.6}/>
         </Container>
     )
 }
