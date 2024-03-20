@@ -17,3 +17,4 @@ export const LocButton = styled(Marker)`
     align-items: center;
     align-self: center;
 `
+
