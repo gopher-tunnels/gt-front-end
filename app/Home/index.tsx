@@ -3,13 +3,15 @@ import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from "react-native-maps";
 import * as Location from "expo-location";
 import LocationButton from "../../components/LocationButton";
+import CustomMarker from "../../components/CustomMarker";
 import { LocationObject as LocationObjectLocation, requestForegroundPermissionsAsync as requestForegroundPermissionsAsyncLocation, watchHeadingAsync as watchHeadingAsyncLocation, LocationSubscription as LocationSubscriptionLocation } from 'expo-location';
 import { DeviceMotion } from 'expo-sensors';
 
 import { 
   Container,
   Map,
-  LocButton
+  LocButton,
+  CustomMark
 } from './styles'
 import Splash from "../Splash";
 
@@ -89,6 +91,7 @@ export default function Home() {
 
   return (
     <Container>
+      
       <Map
       // Specifies the location of the initial view screen
       initialRegion={region}
@@ -102,6 +105,52 @@ export default function Home() {
 
       ref={mapRef}
       >
+        <CustomMark
+          coordinate={{
+            latitude: 44.97588,
+            longitude: -93.23450,       // Morrill Hall
+          }}
+          title={"Morrill Hall"}
+          description={"test test test test test"}
+          tracksViewChanges={false}
+          anchor={{x:0.5, y:0.5}}
+          calloutAnchor={{x: 0, y : 0}}
+          >
+          <CustomMarker width={markerSize} height={markerSize}/>
+        </CustomMark>
+
+        <CustomMark
+          coordinate={{
+            latitude: 44.97530,
+            longitude: -93.23454,      
+          }}
+          title={"Tate Hall"}
+          description={"physics building"}
+          tracksViewChanges={false}
+          anchor={{x:0.5, y:0.5}}
+          calloutAnchor={{x: 0.8, y : 0.5}}
+          >
+          <CustomMarker width={markerSize} height={markerSize}/>
+        </CustomMark>
+
+        <CustomMark
+          coordinate={{
+            latitude: 44.97453,
+            longitude: -93.23474,      
+          }}
+          title={"Vincent Hall"}
+          description={"math"}
+          tracksViewChanges={false}
+          anchor={{x:0.5, y:0.5}}
+          calloutAnchor={{x: 0.8, y : 0.5}}
+          
+          >
+          <CustomMarker width={markerSize} height={markerSize}/>
+        </CustomMark>
+
+      
+        
+
       {location && (
         <LocButton 
           coordinate={{
@@ -118,7 +167,7 @@ export default function Home() {
       </Map>
       {location && (
         <TouchableOpacity onPress={focusMap} style={{ position: 'absolute', bottom: 20, right: 20, backgroundColor: 'white', padding: 10, borderRadius: 10 }}>
-          <Text>Focus to Current Location</Text>
+          <Text>Focus to Currrent Location</Text>
         </TouchableOpacity>
       )}
       <Text style={{fontFamily: "Plus-Jakarta-Sans"}}>heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}</Text>

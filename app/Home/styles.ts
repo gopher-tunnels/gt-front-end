@@ -17,3 +17,8 @@ export const LocButton = styled(Marker)`
     align-items: center;
     align-self: center;
 `
+
+export const CustomMark = styled(Marker)`
+    align-items: center;
+    align-self: center;
+`
