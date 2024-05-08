@@ -1,8 +1,6 @@
 {
   "expo": {
-    "permissions": [
-      "motion"
-    ],
+    "permissions": ["motion"],
     "name": "gt-front-end",
     "slug": "gt-front-end",
     "version": "1.0.0",
@@ -14,9 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -34,7 +30,22 @@
       [
         "expo-font",
         {
-          "fonts" : ["./assets/fonts/PlusJakartaSans-Medium.ttf"]
+          "fonts": [
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Bold",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-BoldItalic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraBold",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraBoldItalic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraLight",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraLightItalic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Italic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Light",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-LightItalic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Medium",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-MediumItalic",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Regular",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBold",
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBoldItalic"
+          ]
         }
       ]
     ]
