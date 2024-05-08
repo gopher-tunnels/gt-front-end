@@ -165,19 +165,19 @@ export default function Home() {
           </TouchableOpacity>
         </>
       )}
-      <Text style={{ fontFamily: 'Plus-Jakarta-Sans' }}>
+      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}
       </Text>
-      <Text style={{ fontFamily: 'Plus-Jakarta-Sans' }}>
+      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         Current user latitude: {location.coords.latitude}
       </Text>
-      <Text style={{ fontFamily: 'Plus-Jakarta-Sans' }}>
+      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         Current user longitude: {location.coords.longitude}
       </Text>
-      <Text style={{ fontFamily: 'Plus-Jakarta-Sans' }}>
+      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         Current latitude: {region.latitude}
       </Text>
-      <Text style={{ fontFamily: 'Plus-Jakarta-Sans' }}>
+      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         Current longitude: {region.longitude}
       </Text>
     </Container>
