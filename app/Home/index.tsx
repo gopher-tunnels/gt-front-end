@@ -17,9 +17,10 @@ import {
 } from 'expo-location';
 import { DeviceMotion } from 'expo-sensors';
 
-import { Container, Map, LocButton } from './styles';
+import { Container, Map, LocButton, Content } from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
+import DirectionsHeader from '../../components/DirectionsHeader';
 
 export interface types {
   newText: string;
@@ -150,22 +151,24 @@ export default function Home() {
               geodesic={true}
             ></MapPolyline>
           </Map>
-          <TouchableOpacity
-            onPress={focusMap}
-            style={{
-              position: 'absolute',
-              bottom: 20,
-              right: 20,
-              backgroundColor: 'white',
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <Text>Focus to Current Location</Text>
-          </TouchableOpacity>
+          <Content pointerEvents="box-none">
+            <TouchableOpacity
+              onPress={focusMap}
+              style={{
+                position: 'absolute',
+                bottom: 20,
+                right: 20,
+                backgroundColor: 'white',
+                padding: 10,
+                borderRadius: 10,
+              }}
+            >
+              <Text>Focus to Current Location</Text>
+            </TouchableOpacity>
+          </Content>
         </>
       )}
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
+      {/* <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}
       </Text>
       <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
@@ -179,7 +182,7 @@ export default function Home() {
       </Text>
       <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
         Current longitude: {region.longitude}
-      </Text>
+      </Text> */}
     </Container>
   );
 }
