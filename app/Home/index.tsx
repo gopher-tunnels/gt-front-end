@@ -11,7 +11,7 @@ import {
   Container,
   Map,
   LocButton,
-  CustomMark
+  CustomMark,
 } from './styles'
 import Splash from "../Splash";
 
@@ -147,6 +147,9 @@ export default function Home() {
           >
           <CustomMarker width={markerSize} height={markerSize}/>
         </CustomMark>
+
+   
+        
 
       
         
