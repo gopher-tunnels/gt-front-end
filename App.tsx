@@ -6,12 +6,11 @@ import lightTheme from './styles/themes/light';
 import Splash from './app/Splash';
 import { useFonts } from 'expo-font';
 import { useCallback } from 'react';
-import * as SplashScreen from 'expo-splash-screen'
+import * as SplashScreen from 'expo-splash-screen';
+import fontObject from './assets/fonts';
 
 export default function App() {
-  const [fontsLoaded, fontError] = useFonts({
-    'Plus-Jakarta-Sans' : require('./assets/fonts/PlusJakartaSans-Medium.ttf')
-  });
+  const [fontsLoaded, fontError] = useFonts(fontObject);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -27,7 +26,7 @@ export default function App() {
     // TODO: set up theme switching
     <ThemeProvider theme={lightTheme}>
       <View style={styles.container} onLayout={onLayoutRootView}>
-        <Home/>
+        <Home />
       </View>
     </ThemeProvider>
   );
