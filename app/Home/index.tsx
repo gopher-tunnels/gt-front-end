@@ -9,29 +9,16 @@ import MapView, {
 } from 'react-native-maps';
 import * as Location from 'expo-location';
 import LocationButton from '../../components/LocationButton';
-<<<<<<< HEAD
 import CustomMarker from "../../components/CustomMarker";
-import {
-  LocationObject as LocationObjectLocation,
-  requestForegroundPermissionsAsync as requestForegroundPermissionsAsyncLocation,
-  watchHeadingAsync as watchHeadingAsyncLocation,
-  LocationSubscription as LocationSubscriptionLocation,
-} from 'expo-location';
-import { DeviceMotion } from 'expo-sensors';
-
-import { Container, Map, LocButton, Content, CustomMark } from './styles';
-import Splash from '../Splash';
-import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
-import DirectionsHeader from '../../components/DirectionsHeader';
-=======
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import fontObject from '../../assets/fonts';
 
-import { Container, Map, LocButton, Content } from './styles';
-
->>>>>>> a06a80dc60b6c8b9c8471695d7f020062b4c84f8
+import { Container, Map, LocButton, Content, CustomMark } from './styles';
+import Splash from '../Splash';
+import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
+import DirectionsHeader from '../../components/DirectionsHeader';
 export interface types {
   newText: string;
 }
