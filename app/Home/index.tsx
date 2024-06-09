@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import MapView, {
   MapPolyline,
@@ -9,6 +9,7 @@ import MapView, {
 } from 'react-native-maps';
 import * as Location from 'expo-location';
 import LocationButton from '../../components/LocationButton';
+<<<<<<< HEAD
 import CustomMarker from "../../components/CustomMarker";
 import {
   LocationObject as LocationObjectLocation,
@@ -22,11 +23,23 @@ import { Container, Map, LocButton, Content, CustomMark } from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
 import DirectionsHeader from '../../components/DirectionsHeader';
+=======
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+import fontObject from '../../assets/fonts';
+
+import { Container, Map, LocButton, Content } from './styles';
+
+>>>>>>> a06a80dc60b6c8b9c8471695d7f020062b4c84f8
 export interface types {
   newText: string;
 }
 
+SplashScreen.preventAutoHideAsync();
+
 export default function Home() {
+  const [fontsLoaded, fontsError] = useFonts(fontObject);
   // State to get the current user location
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
@@ -57,7 +70,7 @@ export default function Home() {
       });
     }
   };
-
+  // TODO: @limetheman merge these calls to `useEffect` (they both have the same dependency array)
   useEffect(() => {
     const getLocation = async () => {
       try {
@@ -104,12 +117,19 @@ export default function Home() {
     setRegion(newRegion);
   };
 
-  if (!location) {
-    return <Splash />;
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsError) console.warn(fontsError);
+    if ((fontsLoaded || fontsError) && location) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontsError, location]);
+
+  if (!(fontsLoaded || fontsError) || !location) {
+    return null;
   }
 
   return (
-    <Container>
+    <Container onLayout={onLayoutRootView}>
       {location && (
         <>
           <Map
@@ -185,6 +205,7 @@ export default function Home() {
             >
               <Text>Focus to Current Location</Text>
             </TouchableOpacity>
+            {/* <DirectionsModal /> */}
           </Content>
         </>
       )}
