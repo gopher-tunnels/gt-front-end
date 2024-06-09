@@ -9,8 +9,8 @@ export interface Props {
 
 const CustomMarker: React.FC<Props> = (props: Props) => {
     const {
-        width = 80,
-        height = 80,
+        width = 50,
+        height = 50,
     } = props;
     return (
         <View>
