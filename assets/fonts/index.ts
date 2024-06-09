@@ -1,33 +1,27 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const PlusJakartaSans = {
-  'PlusJakartaSans-Bold': './assets/fonts/PlusJakartaSans/PlusJakartaSans-Bold',
-  'PlusJakartaSans-BoldItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-BoldItalic',
-  'PlusJakartaSans-ExtraBold':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraBold',
-  'PlusJakartaSans-ExtraBoldItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraBoldItalic',
-  'PlusJakartaSans-ExtraLight':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraLight',
-  'PlusJakartaSans-ExtraLightItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraLightItalic',
-  'PlusJakartaSans-Italic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-Italic',
-  'PlusJakartaSans-Light':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-Light',
-  'PlusJakartaSans-LightItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-LightItalic',
-  'PlusJakartaSans-Medium':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-Medium',
-  'PlusJakartaSans-MediumItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-MediumItalic',
-  'PlusJakartaSans-Regular':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-Regular',
-  'PlusJakartaSans-SemiBold':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBold',
-  'PlusJakartaSans-SemiBoldItalic':
-    './assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBoldItalic',
+  // 200
+  'PlusJakartaSans-ExtraLight': require('./PlusJakartaSans/PlusJakartaSans-ExtraLight.ttf'),
+  'PlusJakartaSans-ExtraLightItalic': require('./PlusJakartaSans/PlusJakartaSans-ExtraLightItalic.ttf'),
+  // 300
+  'PlusJakartaSans-Light': require('./PlusJakartaSans/PlusJakartaSans-Light.ttf'),
+  'PlusJakartaSans-LightItalic': require('./PlusJakartaSans/PlusJakartaSans-LightItalic.ttf'),
+  // 400
+  'PlusJakartaSans-Regular': require('./PlusJakartaSans/PlusJakartaSans-Regular.ttf'),
+  'PlusJakartaSans-RegularItalic': require('./PlusJakartaSans/PlusJakartaSans-Italic.ttf'),
+  // 500
+  'PlusJakartaSans-Medium': require('./PlusJakartaSans/PlusJakartaSans-Medium.ttf'),
+  'PlusJakartaSans-MediumItalic': require('./PlusJakartaSans/PlusJakartaSans-MediumItalic.ttf'),
+  // 600
+  'PlusJakartaSans-SemiBold': require('./PlusJakartaSans/PlusJakartaSans-SemiBold.ttf'),
+  'PlusJakartaSans-SemiBoldItalic': require('./PlusJakartaSans/PlusJakartaSans-SemiBoldItalic.ttf'),
+  // 700
+  'PlusJakartaSans-Bold': require('./PlusJakartaSans/PlusJakartaSans-Bold.ttf'),
+  'PlusJakartaSans-BoldItalic': require('./PlusJakartaSans/PlusJakartaSans-BoldItalic.ttf'),
+  // 800
+  'PlusJakartaSans-ExtraBold': require('./PlusJakartaSans/PlusJakartaSans-ExtraBold.ttf'),
+  'PlusJakartaSans-ExtraBoldItalic': require('./PlusJakartaSans/PlusJakartaSans-ExtraBoldItalic.ttf'),
 };
 
 export default {
