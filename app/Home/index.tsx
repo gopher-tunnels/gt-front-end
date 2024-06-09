@@ -155,13 +155,26 @@ export default function Home() {
           title={"Morrill Hall"}
           description={"test test test test test"}
           tracksViewChanges={false}
-          key={31}
-          anchor={{x:0.6, y:0.6}}
-          calloutAnchor={{x: 0, y : 0}}
+          anchor={{x:0.5, y:0.5}}
+          calloutAnchor={{x: 0.5, y : 0.2}}
           >
           <CustomMarker width={markerSize} height={markerSize}/>
         </CustomMark>
 
+        <CustomMark
+          coordinate={{
+            latitude: 44.97530,
+            longitude: -93.23454,      
+          }}
+          title={"Tate Hall"}
+          description={"physics building"}
+          tracksViewChanges={false}
+          
+          anchor={{x:0.5, y:0.5}}
+          calloutAnchor={{x: 0.5, y : 0.2}}
+          >
+          <CustomMarker width={markerSize} height={markerSize}/>
+        </CustomMark>
 
 
 
