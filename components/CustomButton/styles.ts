@@ -12,17 +12,12 @@ export const Container = styled.Pressable<ContainerProps>`
   align-items: center;
   justify-content: center;
   background-color: ${({ variant, theme }) =>
-    !variant || variant === 'filled'
-      ? theme.colors.primaryMain
-      : 'transparent'};
+    variant === 'outlined' ? 'transparent' : theme.colors.primaryMain};
   border: ${({ variant, theme }) =>
-    !variant || variant === 'filled'
-      ? 'none'
-      : `1px solid ${theme.colors.primaryMain}`};
+    variant === 'outlined' ? `1px solid ${theme.colors.primaryMain}` : 'none'};
   max-width: 360px;
   height: 48px;
   border-radius: 8px;
-  margin: 0 16px;
   gap: ${({ loading }) => (loading ? 12 : 8)}px;
 `;
 

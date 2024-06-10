@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Mask, MaskWrapper } from './styles';
 import { StyledText } from '../../styles/global';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { useTheme } from 'styled-components/native';
 import MaskedView from '@react-native-masked-view/masked-view';
 
@@ -14,6 +14,7 @@ interface CustomButtonProps extends React.ComponentProps<typeof Container> {
 
 const CustomButton: React.FC<CustomButtonProps> = ({
   label,
+  disabled,
   loadingLabel,
   style,
   variant,
@@ -37,22 +38,20 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     >
       <Container
         {...props}
-        disabled={loading}
+        disabled={loading || disabled}
         style={({ pressed }) => ({
           ...(pressed ? { opacity: 0.8 } : {}),
           ...((typeof style === 'function'
             ? style({ pressed })
             : style) as Object),
         })}
+        variant={variant}
       >
         <StyledText
           variant="normal"
           weight={700}
           style={{
-            color:
-              !variant || variant === 'filled'
-                ? 'white'
-                : theme.colors.primaryMain,
+            color: variant === 'outlined' ? theme.colors.primaryMain : 'white',
           }}
         >
           {loading ? loadingLabel || label : label}
@@ -60,11 +59,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         {loading ? (
           <FontAwesome5
             name="hourglass"
-            color={
-              !variant || variant === 'filled'
-                ? 'white'
-                : theme.colors.primaryMain
-            }
+            color={variant === 'outlined' ? theme.colors.primaryMain : 'white'}
             size={20}
           />
         ) : (
