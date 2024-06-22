@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
-import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
-import LocationButton from "../../components/LocationButton";
-import { LocationObject as LocationObjectLocation, requestForegroundPermissionsAsync as requestForegroundPermissionsAsyncLocation, watchHeadingAsync as watchHeadingAsyncLocation, LocationSubscription as LocationSubscriptionLocation } from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
+import * as Location from 'expo-location';
+import LocationButton from '../../components/LocationButton';
+import {
+  LocationObject as LocationObjectLocation,
+  requestForegroundPermissionsAsync as requestForegroundPermissionsAsyncLocation,
+  watchHeadingAsync as watchHeadingAsyncLocation,
+  LocationSubscription as LocationSubscriptionLocation,
+} from 'expo-location';
 import { DeviceMotion } from 'expo-sensors';
 
-import { 
-  Container,
-  Map
-} from './styles'
-
-
-
+import { Container, Map } from './styles';
+import TunnelEntranceImage from '../../components/TunnelEntranceImage';
 
 export interface types {
   newText: string;
@@ -20,7 +20,9 @@ export interface types {
 
 export default function Home() {
   // State to get the current user location
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
   // State to get the current location of the current user view
   const [region, setRegion] = useState({
     latitude: 44.97565862446892,
@@ -37,7 +39,7 @@ export default function Home() {
   useEffect(() => {
     const getLocation = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted'){
+      if (status !== 'granted') {
         setErrorMsg('Location permissions denied');
         return;
       }
@@ -45,15 +47,14 @@ export default function Home() {
         const currentLocation = await Location.getCurrentPositionAsync({});
         setLocation(currentLocation);
       } catch (error) {
-        setErrorMsg('Error getting current location')
+        setErrorMsg('Error getting current location');
       }
-    }
+    };
     getLocation();
 
     const interval = setInterval(getLocation, 1);
     return () => clearInterval(interval);
   }, []);
-
 
   useEffect(() => {
     const startWatchingOrientation = async () => {
@@ -63,7 +64,7 @@ export default function Home() {
         return;
       }
 
-      DeviceMotion.addListener(({rotation}) => {
+      DeviceMotion.addListener(({ rotation }) => {
         const radToDeg = 180 / Math.PI;
         const angle = Math.atan2(rotation.gamma, rotation.beta) * radToDeg;
         setOrientation(angle);
@@ -77,7 +78,6 @@ export default function Home() {
     };
   }, []);
 
-
   const handleRegionChange = (newRegion: any) => {
     // Calculate zoom level based on latitudeDelta
     const newZoomLevel = Math.log2(360 / newRegion.longitudeDelta);
@@ -87,42 +87,48 @@ export default function Home() {
     setRegion(newRegion);
   };
 
-  
   if (!location) {
-    return <Text>Loading...</Text>
+    return <Text>Loading...</Text>;
   }
 
   return (
     <Container>
       <Map
-      // Specifies the location of the initial view screen
-      initialRegion={region}
-      // OnRegionChangeComplete runs when the user stops dragging the map view, our callback function uses this and sets the current region to the location of the screen where the user stopped
-      onRegionChange={(region) => {handleRegionChange(region)}}
-      showsUserLocation={false}
-      showsMyLocationButton={false}
-      showsBuildings={true}
-      userInterfaceStyle="light"
-      >
-      {location && (
-        <Marker coordinate={{
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        // Specifies the location of the initial view screen
+        initialRegion={region}
+        // OnRegionChangeComplete runs when the user stops dragging the map view, our callback function uses this and sets the current region to the location of the screen where the user stopped
+        onRegionChange={(region) => {
+          handleRegionChange(region);
         }}
-        rotation={orientation || 0} // Set the rotation of the marker based on the user's heading
-        anchor={{ x: 0.5, y: 0.5 }} // Adjust anchor to center of marker
-        centerOffset={{ x: 0, y: 0 }} // Adjust centerOffset based on marker size
-        calloutOffset={{ x: 0, y: 0 }} // Adjust calloutOffset based on marker size
-      > 
-        <LocationButton width={markerSize} height={markerSize}/>
-      </Marker>
+        showsUserLocation={false}
+        showsMyLocationButton={false}
+        showsBuildings={true}
+        userInterfaceStyle="light"
+      >
+        {location && (
+          <Marker
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+            rotation={orientation || 0} // Set the rotation of the marker based on the user's heading
+            anchor={{ x: 0.5, y: 0.5 }} // Adjust anchor to center of marker
+            centerOffset={{ x: 0, y: 0 }} // Adjust centerOffset based on marker size
+            calloutOffset={{ x: 0, y: 0 }} // Adjust calloutOffset based on marker size
+          >
+            <LocationButton width={markerSize} height={markerSize} />
+          </Marker>
         )}
-
+        <View style={{ marginTop: 50 }}>
+          <TunnelEntranceImage
+            imageUrl="https://www.archkey.com/wp-content/uploads/TateHallUMN_FarmKidStudios2-scaled.jpg"
+            description="Tate Hall my goat"
+          />
+        </View>
       </Map>
       <Text>Current latitude: {region.latitude}</Text>
       <Text>Current longitude: {region.longitude}</Text>
       <Text>Bruh</Text>
     </Container>
   );
-};
-
+}
