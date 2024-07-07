@@ -15,6 +15,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import fontObject from '../../assets/fonts';
 
 import { Container, Map, LocButton, Content } from './styles';
+import SearchBar from '../../components/Searchbar';
 
 export interface types {
   newText: string;
@@ -171,6 +172,7 @@ export default function Home() {
             </TouchableOpacity>
             {/* <DirectionsModal /> */}
           </Content>
+          <SearchBar />
         </>
       )}
       {/* <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
