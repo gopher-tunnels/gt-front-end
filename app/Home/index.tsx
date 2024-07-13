@@ -10,12 +10,13 @@ import MapView, {
 import * as Location from 'expo-location';
 import LocationButton from '../../components/LocationButton';
 import CustomMarker from "../../components/CustomMarker";
+import CustomChips from "../../components/CustomChips";
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import fontObject from '../../assets/fonts';
 
-import { Container, Map, LocButton, Content, CustomMark } from './styles';
+import { Container, Map, LocButton, Content, CustomMark, CustomChip } from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
 import DirectionsHeader from '../../components/DirectionsHeader';
@@ -192,6 +193,15 @@ export default function Home() {
             ></MapPolyline>
           </Map>
           <Content pointerEvents="box-none">
+            <CustomChip>
+            <CustomChips
+              width={130}
+              height={40}
+              label="Akerman Hall"
+              onPress={() => console.log('pressss')}
+              styleType='default'  // 4 Styles Available: default, tunnel, skyway, sidewalk
+            />
+            </CustomChip>
             <TouchableOpacity
               onPress={focusMap}
               style={{

@@ -1,23 +1,48 @@
 import React from "react";
-import {View, TouchableOpacity} from 'react-native';
-import SideChip from '../../assets/siedwalkChip.svg';
-import TunChip from '../../assets/tunnelChip.svg';
-import SkyChip from '../../assets/skywayChip.svg';
+import {View, Text, TouchableOpacity} from 'react-native';
+import { Container, ChipText, Circle } from "./styles";
+
 
 export interface Props {
     width: number;
     height: number;
+    label: string;
+    onPress: () => void;
+    styleType?: 'default' | 'tunnel' | 'skyway' | 'sidewalk';
+    
 }
 
 const CustomChips: React.FC<Props> = (props: Props) => {
     const {
         width = 100,
-        height = 100,
+        height = 40,
+        label,
+        onPress,
+        styleType = 'default',
     } = props;
     return (
-        <View>
-            <SideChip width={width} height={height}/>
-        </View>
+
+        <TouchableOpacity onPress={onPress} style={{ width, height }}>
+            <Container styleType={styleType}>
+                <Circle styleType={styleType}/>
+                <ChipText styleType={styleType}>{label}</ChipText>
+            </Container>
+        </TouchableOpacity>
+        
+        // <TouchableOpacity
+        //     onPress={onPress}
+        //     style={[
+                
+        //         {
+        //             width,
+        //             height,
+                    
+        //         }
+        //     ]}
+        //     >
+        //         <ChipText>{label}</ChipText>
+        // </TouchableOpacity>
+      
     );
 }
 

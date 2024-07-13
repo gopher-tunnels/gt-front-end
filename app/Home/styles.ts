@@ -33,3 +33,8 @@ export const CustomMark = styled(Marker)`
     align-items: center;
     align-self: center;
 `
+
+export const CustomChip = styled(TouchableOpacity)`
+    align-items: center;
+    align-self: center;
+`
