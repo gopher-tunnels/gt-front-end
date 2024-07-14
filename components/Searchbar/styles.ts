@@ -1,19 +1,9 @@
 import styled from "styled-components/native";
 
-// export const Container = styled.View`
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     width: 200px;
-//     bottom: 0;
-//     background-color: red;
-// `
-
 export const Container = styled.View`
-    position: absolute;
-    top: 48px;
-    left: 16px;
-    right: 16px;
+    margin-top: 48px;
+    margin-left: 16px;
+    margin-right: 16px;
 `
 
 export const Bar = styled.View`

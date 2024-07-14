@@ -157,6 +157,7 @@ export default function Home() {
             ></MapPolyline>
           </Map>
           <Content pointerEvents="box-none">
+            <SearchBar />
             <TouchableOpacity
               onPress={focusMap}
               style={{
@@ -172,7 +173,6 @@ export default function Home() {
             </TouchableOpacity>
             {/* <DirectionsModal /> */}
           </Content>
-          <SearchBar />
         </>
       )}
       {/* <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
