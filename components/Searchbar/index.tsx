@@ -22,6 +22,7 @@ export default function Searchbar(props: Props) {
                     borderColor: isFocused ? theme.colors.primaryMain : "#BC808C",
                     borderBottomLeftRadius: isFocused ? 0 : 32,
                     borderBottomRightRadius: isFocused ? 0 : 32,
+                    shadowColor: isFocused ? "#FFE9B9" : "rgba(0,0,0,0)",
                 }}
             >
                 <SearchInput

@@ -21,6 +21,9 @@ export const Bar = styled.View`
     padding: 16px 24px;
     border: 1px solid;
     border-radius: 32px;
+    shadowOpacity: 0.2;
+    shadowRadius: 3px;
+    elevation: 20;
 `
 
 export const SearchInput = styled.TextInput`
