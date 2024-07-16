@@ -23,10 +23,30 @@ export const SearchInput = styled.TextInput`
 `
 
 export const SearchResultContainer = styled.View`
-    height: 240px;
     background-color: white;
     border: 1px solid gray;
     border-top-width: 0;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
+`
+
+export const BuildingButton = styled.View`
+    width: 100%;
+    height: 80px;
+    padding: 24px;
+`
+
+export const BuildingName = styled.Text`
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20.16px;
+    color: ${({theme}) => theme.colors.primary5};
+    `
+
+export const BuildingAddress = styled.Text`
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20.16px;
+    height: 20.16px;
+    color: gray;
 `

@@ -1,8 +1,13 @@
 import React, { useEffect } from "react";
 import { Keyboard, ScrollView, TextInput } from "react-native";
-import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Bar, BuildingAddress, BuildingButton, BuildingName, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
+
+const TEMP_BUILDINGS = [
+    {name: "Ralph Rapson Hall", address: "89 Church St SE, Minneapolis, MN 55455"},
+    {name: "Akerman Hall", address: "110 Union St SE, Minneapolis, MN 55455"},
+    {name: "Coffman Memorial Union", address: "300 Washington Avenue SE, Minneapolis"},
+]
 
 interface Props {
 
@@ -43,6 +48,12 @@ export default function Searchbar(props: Props) {
                     />
                 </Bar>
                 <SearchResultContainer style={{ display: isFocused ? "flex" : "none" }}>
+                    {TEMP_BUILDINGS.map((building) => (
+                        <BuildingButton key={building.name}>
+                            <BuildingName>{building.name}</BuildingName>
+                            <BuildingAddress>{building.address}</BuildingAddress>
+                        </BuildingButton>
+                    ))}
                 </SearchResultContainer>
             </ScrollView>
         </Container>
