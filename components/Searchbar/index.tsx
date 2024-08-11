@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { Keyboard, ScrollView, TextInput } from "react-native";
-import { Bar, BuildingAddress, BuildingButton, BuildingName, Container, SearchInput, SearchResultContainer } from "./styles";
+import { Bar, BuildingAddress, BuildingButton, BuildingIcon, BuildingName, BuildingTextContainer, Container, MagnifyingGlass, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
+import magnifyingGlass from "../../assets/magnifying-glass.png";
+import house from "../../assets/m-house.png";
 
 const TEMP_BUILDINGS = [
     {name: "Ralph Rapson Hall", address: "89 Church St SE, Minneapolis, MN 55455"},
@@ -38,6 +40,7 @@ export default function Searchbar(props: Props) {
                         shadowColor: isFocused ? "#FFE9B9" : "rgba(0,0,0,0)",
                     }}
                 >
+                    <MagnifyingGlass source={magnifyingGlass} />
                     <SearchInput
                         placeholder="Where to?"
                         cursorColor={theme.colors.primary4}
@@ -50,8 +53,11 @@ export default function Searchbar(props: Props) {
                 <SearchResultContainer style={{ display: isFocused ? "flex" : "none" }}>
                     {TEMP_BUILDINGS.map((building) => (
                         <BuildingButton key={building.name}>
-                            <BuildingName>{building.name}</BuildingName>
-                            <BuildingAddress>{building.address}</BuildingAddress>
+                            <BuildingIcon source={house} />
+                            <BuildingTextContainer>
+                                <BuildingName>{building.name}</BuildingName>
+                                <BuildingAddress>{building.address}</BuildingAddress>
+                            </BuildingTextContainer>
                         </BuildingButton>
                     ))}
                 </SearchResultContainer>

@@ -7,6 +7,9 @@ export const Container = styled.View`
 `
 
 export const Bar = styled.View`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     background-color: white;
     padding: 16px 24px;
     border: 1px solid;
@@ -16,7 +19,14 @@ export const Bar = styled.View`
     elevation: 20;
 `
 
+export const MagnifyingGlass = styled.Image`
+    width: 24px;
+    height: 24px;
+    margin-right: 16px;
+`
+
 export const SearchInput = styled.TextInput`
+    flex: 1;
     font-size: 15px;
     font-weight: 500;
     color: ${({theme}) => theme.colors.primaryMain};
@@ -34,6 +44,18 @@ export const BuildingButton = styled.View`
     width: 100%;
     height: 80px;
     padding: 24px;
+    display: flex;
+    flex-direction: row;
+`
+
+export const BuildingIcon = styled.Image`
+    width: 16px;
+    height: 16px;
+    margin-right: 16px;
+`
+
+export const BuildingTextContainer = styled.View`
+    flex: 1;
 `
 
 export const BuildingName = styled.Text`
