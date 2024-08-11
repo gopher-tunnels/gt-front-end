@@ -28,6 +28,7 @@ const lightTheme = {
     secondaryDarkest: '#735c17',
     contrast: '#000000',
     neutral: '#ffffff',
+    gray1: '#6d6d6d'
   },
 };
 
