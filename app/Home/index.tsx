@@ -16,7 +16,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import fontObject from '../../assets/fonts';
 
-import { Container, Map, LocButton, Content, CustomMark, CustomChip } from './styles';
+import { Container, Map, LocButton, Content, CustomMark} from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
 import DirectionsHeader from '../../components/DirectionsHeader';
@@ -193,15 +193,18 @@ export default function Home() {
             ></MapPolyline>
           </Map>
           <Content pointerEvents="box-none">
-            <CustomChip>
-            <CustomChips
-              width={130}
-              height={40}
-              label="Akerman Hall"
-              onPress={() => console.log('pressss')}
-              styleType='default'  // 4 Styles Available: default, tunnel, skyway, sidewalk
-            />
-            </CustomChip>
+            {[
+              {name: 'Akerman Hall', style: 'default'},
+            ].map((item, index) => (
+              <CustomChips
+                key={index}
+                label={item.name}
+                onPress={() => console.log(`${item.name} was pressed`)}
+                styleType={item.style ?? 'default'}  // 4 Styles Available: default, tunnel, skyway, sidewalk
+              />
+            ))}
+           
+
             <TouchableOpacity
               onPress={focusMap}
               style={{

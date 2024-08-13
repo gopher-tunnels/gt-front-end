@@ -28,6 +28,12 @@ const darkTheme = {
     secondaryDarkest: '#735c17',
     contrast: '#ffffff',
     neutral: '#0f0f0f',
+    tunnel1: '#FFF5E6',
+    tunnel2: '#E58600',
+    skyway1: '#F4E5FF',
+    skyway2: '#9500FF',
+    sidewalk1: '#DFF4FF',
+    sidewalk2: '#0CA8FF',
   },
 };
 

@@ -3,9 +3,9 @@ import styled, { css } from "styled-components/native";
 
 export const Container = styled.View<{styleType: 'default' | 'tunnel' | 'skyway' | 'sidewalk'}>`
     padding: 4px 10px;
-    background-color: #FFFFFF;
+    background-color: ${({ theme }) => theme.colors.neutral};
     border-radius: 100px;
-    border: 1px solid #BC808C;
+    border: 1px solid ${({ theme }) => theme.colors.primary4};
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -13,42 +13,44 @@ export const Container = styled.View<{styleType: 'default' | 'tunnel' | 'skyway'
     flex-wrap: nowrap;
     position: relative;
     top: 30px;
+    align-self: flex-start;
+    flex-shrink: 1;
 
     ${props => props.styleType === 'tunnel' && css`
-        background-color: #FFF5E6;
-        border-color: #FFF5E6;
+        background-color: ${({ theme }) => theme.colors.tunnel1};
+        border-color: ${({ theme }) => theme.colors.tunnel1};
     `}
 
     ${props => props.styleType === 'skyway' && css`
-        background-color: #F4E5FF;
-        border-color: #F4E5FF;
+        background-color: ${({ theme }) => theme.colors.skyway1};
+        border-color: ${({ theme }) => theme.colors.skyway1};
     `}
 
     ${props => props.styleType === 'sidewalk' && css`
-        background-color: #DFF4FF;
-        border-color: #DFF4FF;
+        background-color: ${({ theme }) => theme.colors.sidewalk1};
+        border-color: ${({ theme }) => theme.colors.sidewalk1};
     `}
 
 `;
 
 export const ChipText = styled.Text<{styleType: 'default' | 'tunnel' | 'skyway' | 'sidewalk'}>`
-    color: #7A0019;
+    color: ${({ theme }) => theme.colors.primaryMain};
     font-size: 16px;
     text-align: center;
 
     ${props => props.styleType === 'tunnel' && css`
         font-size: 16px;
-        color: #E58600;
+        color: ${({ theme }) => theme.colors.tunnel2};
     `}
 
     ${props => props.styleType === 'skyway' && css`
         font-size: 16px;
-        color: #9500FF;
+        color: ${({ theme }) => theme.colors.skyway2};
     `}
 
     ${props => props.styleType === 'sidewalk' && css`
         font-size: 16px;
-        color: #0CA8FF;
+        color: ${({ theme }) => theme.colors.sidewalk2};
     `}
 `;
 
