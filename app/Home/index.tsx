@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Alert, Platform, Text, TouchableOpacity, View } from "react-native";
 import MapView, {
   MapPolyline,
   Marker,
   PROVIDER_DEFAULT,
   PROVIDER_GOOGLE,
   Polyline,
-} from 'react-native-maps';
-import * as Location from 'expo-location';
-import LocationButton from '../../components/LocationButton';
-import CustomMarker from '../../components/CustomMarker';
-import CustomChip from '../../components/CustomChip';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+} from "react-native-maps";
+import * as Location from "expo-location";
+import LocationButton from "../../components/LocationButton";
+import CustomMarker from "../../components/CustomMarker";
+import CustomChip from "../../components/CustomChip";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 
-import fontObject from '../../assets/fonts';
+import fontObject from "../../assets/fonts";
 
-import { Container, Map, LocButton, Content, CustomMark } from './styles';
-import Splash from '../Splash';
-import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
-import DirectionsHeader from '../../components/DirectionsHeader';
-import SearchBar from '../../components/Searchbar';
+import { Container, Map, LocButton, Content, CustomMark } from "./styles";
+import Splash from "../Splash";
+import { LocationSubscriber } from "expo-location/build/LocationSubscribers";
+import DirectionsHeader from "../../components/DirectionsHeader";
+import SearchBar from "../../components/Searchbar";
 export interface types {
   newText: string;
 }
@@ -65,15 +65,15 @@ export default function Home() {
       try {
         const { status: permissionStatus } =
           await Location.requestForegroundPermissionsAsync();
-        if (permissionStatus !== 'granted') {
-          console.log('Location permission not granted');
+        if (permissionStatus !== "granted") {
+          console.log("Location permission not granted");
           return;
         }
 
-        let currentLocation = await Location.getCurrentPositionAsync();
+        const currentLocation = await Location.getCurrentPositionAsync();
         setLocation(currentLocation);
       } catch (error) {
-        console.error('Error getting location:', error);
+        console.error("Error getting location:", error);
       }
     };
 
@@ -90,7 +90,7 @@ export default function Home() {
           setHeading(newHeading.trueHeading);
         });
       } catch (error) {
-        console.error('Error getting heading:', error);
+        console.error("Error getting heading:", error);
       }
     };
 
@@ -133,7 +133,7 @@ export default function Home() {
             showsBuildings={true}
             userInterfaceStyle="light"
             provider={
-              Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
+              Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
             }
             ref={mapRef}
           >
@@ -154,8 +154,8 @@ export default function Home() {
                 latitude: 44.97588,
                 longitude: -93.2345, // Morrill Hall
               }}
-              title={'Morrill Hall'}
-              description={'test test test test test'}
+              title={"Morrill Hall"}
+              description={"test test test test test"}
               tracksViewChanges={false}
               anchor={{ x: 0.5, y: 0.5 }}
               calloutAnchor={{ x: 0.5, y: 0.2 }}
@@ -168,8 +168,8 @@ export default function Home() {
                 latitude: 44.9753,
                 longitude: -93.23454,
               }}
-              title={'Tate Hall'}
-              description={'physics building'}
+              title={"Tate Hall"}
+              description={"physics building"}
               tracksViewChanges={false}
               anchor={{ x: 0.5, y: 0.5 }}
               calloutAnchor={{ x: 0.5, y: 0.2 }}
@@ -195,10 +195,10 @@ export default function Home() {
             <TouchableOpacity
               onPress={focusMap}
               style={{
-                position: 'absolute',
+                position: "absolute",
                 bottom: 20,
                 right: 20,
-                backgroundColor: 'white',
+                backgroundColor: "white",
                 padding: 10,
                 borderRadius: 10,
               }}
