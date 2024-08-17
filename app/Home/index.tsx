@@ -9,14 +9,14 @@ import MapView, {
 } from 'react-native-maps';
 import * as Location from 'expo-location';
 import LocationButton from '../../components/LocationButton';
-import CustomMarker from "../../components/CustomMarker";
-import CustomChips from "../../components/CustomChips";
+import CustomMarker from '../../components/CustomMarker';
+import CustomChip from '../../components/CustomChip';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
 import fontObject from '../../assets/fonts';
 
-import { Container, Map, LocButton, Content, CustomMark} from './styles';
+import { Container, Map, LocButton, Content, CustomMark } from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
 import DirectionsHeader from '../../components/DirectionsHeader';
@@ -149,35 +149,32 @@ export default function Home() {
             </LocButton>
 
             <CustomMark
-          coordinate={{
-            latitude: 44.97588,
-            longitude: -93.23450,       // Morrill Hall
-          }}
-          title={"Morrill Hall"}
-          description={"test test test test test"}
-          tracksViewChanges={false}
-          anchor={{x:0.5, y:0.5}}
-          calloutAnchor={{x: 0.5, y : 0.2}}
-          >
-          <CustomMarker width={markerSize} height={markerSize}/>
-        </CustomMark>
+              coordinate={{
+                latitude: 44.97588,
+                longitude: -93.2345, // Morrill Hall
+              }}
+              title={'Morrill Hall'}
+              description={'test test test test test'}
+              tracksViewChanges={false}
+              anchor={{ x: 0.5, y: 0.5 }}
+              calloutAnchor={{ x: 0.5, y: 0.2 }}
+            >
+              <CustomMarker width={markerSize} height={markerSize} />
+            </CustomMark>
 
-        <CustomMark
-          coordinate={{
-            latitude: 44.97530,
-            longitude: -93.23454,      
-          }}
-          title={"Tate Hall"}
-          description={"physics building"}
-          tracksViewChanges={false}
-          
-          anchor={{x:0.5, y:0.5}}
-          calloutAnchor={{x: 0.5, y : 0.2}}
-          >
-          <CustomMarker width={markerSize} height={markerSize}/>
-        </CustomMark>
-
-
+            <CustomMark
+              coordinate={{
+                latitude: 44.9753,
+                longitude: -93.23454,
+              }}
+              title={'Tate Hall'}
+              description={'physics building'}
+              tracksViewChanges={false}
+              anchor={{ x: 0.5, y: 0.5 }}
+              calloutAnchor={{ x: 0.5, y: 0.2 }}
+            >
+              <CustomMarker width={markerSize} height={markerSize} />
+            </CustomMark>
 
             <MapPolyline
               coordinates={[
@@ -193,18 +190,6 @@ export default function Home() {
             ></MapPolyline>
           </Map>
           <Content pointerEvents="box-none">
-            {[
-              {name: 'Akerman Hall', style: 'default'},
-            ].map((item, index) => (
-              <CustomChips
-                key={index}
-                label={item.name}
-                onPress={() => console.log(`${item.name} was pressed`)}
-                styleType={item.style ?? 'default'}  // 4 Styles Available: default, tunnel, skyway, sidewalk
-              />
-            ))}
-           
-
             <TouchableOpacity
               onPress={focusMap}
               style={{
