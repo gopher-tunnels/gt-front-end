@@ -20,6 +20,7 @@ import { Container, Map, LocButton, Content, CustomMark } from './styles';
 import Splash from '../Splash';
 import { LocationSubscriber } from 'expo-location/build/LocationSubscribers';
 import DirectionsHeader from '../../components/DirectionsHeader';
+import SearchBar from '../../components/Searchbar';
 export interface types {
   newText: string;
 }
@@ -190,6 +191,7 @@ export default function Home() {
             ></MapPolyline>
           </Map>
           <Content pointerEvents="box-none">
+            <SearchBar />
             <TouchableOpacity
               onPress={focusMap}
               style={{

@@ -34,7 +34,7 @@ const lightTheme = {
     skyway2: '#9500FF',
     sidewalk1: '#DFF4FF',
     sidewalk2: '#0CA8FF',
-    
+    gray1: '#6d6d6d',
   },
 };
 
