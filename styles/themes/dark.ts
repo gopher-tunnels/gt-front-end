@@ -28,6 +28,7 @@ const darkTheme = {
     secondaryDarkest: '#735c17',
     contrast: '#ffffff',
     neutral: '#0f0f0f',
+    gray1: '#6d6d6d'
   },
 };
 
