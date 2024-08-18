@@ -1,9 +1,12 @@
-// import {Marker} from "react-native-maps";
 import styled, { css } from "styled-components/native";
+import { ComponentProps } from "react";
+import CustomChip from ".";
 
-export const Container = styled.View<{
-  styleType: "default" | "tunnel" | "skyway" | "sidewalk";
-}>`
+interface CommonProps {
+  type: ComponentProps<typeof CustomChip>["type"];
+}
+
+export const Container = styled.TouchableOpacity<CommonProps>`
   padding: 6px 12px;
   background-color: ${({ theme }) => theme.colors.neutral};
   border-radius: 100px;
@@ -14,79 +17,47 @@ export const Container = styled.View<{
   flex-wrap: nowrap;
   position: relative;
   align-self: flex-start;
-  flex-shrink: 1;
 
   ${(props) =>
-    props.styleType === "tunnel" &&
+    props.type !== "default" &&
     css`
-      background-color: ${({ theme }) => theme.colors.tunnel1};
-      border-color: ${({ theme }) => theme.colors.tunnel1};
-    `}
-
-  ${(props) =>
-    props.styleType === "skyway" &&
-    css`
-      background-color: ${({ theme }) => theme.colors.skyway1};
-      border-color: ${({ theme }) => theme.colors.skyway1};
-    `}
-
-    ${(props) =>
-    props.styleType === "sidewalk" &&
-    css`
-      background-color: ${({ theme }) => theme.colors.sidewalk1};
-      border-color: ${({ theme }) => theme.colors.sidewalk1};
+      background-color: ${({ theme }) => theme.colors[`${props.type}1`]};
+      border-color: ${({ theme }) => theme.colors[`${props.type}1`]};
     `}
 `;
 
-export const ChipText = styled.Text<{
-  styleType: "default" | "tunnel" | "skyway" | "sidewalk";
-}>`
+export const ChipText = styled.Text<CommonProps>`
   color: ${({ theme }) => theme.colors.primaryMain};
   font-size: 16px;
   text-align: center;
   font-family: PlusJakartaSans-Medium;
 
   ${(props) =>
-    props.styleType === "tunnel" &&
+    props.type !== "default" &&
     css`
-      color: ${({ theme }) => theme.colors.tunnel2};
-    `}
-
-  ${(props) =>
-    props.styleType === "skyway" &&
-    css`
-      color: ${({ theme }) => theme.colors.skyway2};
-    `}
-
-    ${(props) =>
-    props.styleType === "sidewalk" &&
-    css`
-      color: ${({ theme }) => theme.colors.sidewalk2};
+      color: ${({ theme }) => theme.colors[`${props.type}2`]};
     `}
 `;
 
-export const Circle = styled.View<{
-  styleType: "default" | "tunnel" | "skyway" | "sidewalk";
-}>`
+export const Circle = styled.View<CommonProps>`
+  width: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-right: 4px;
   ${(props) =>
-    props.styleType === "tunnel" &&
+    props.type === "tunnel" &&
     css`
-      width: 15px;
-      height: 15px;
-      border-radius: 10px;
-      margin-right: 4px;
-
       background-color: #e58600;
     `}
 
   ${(props) =>
-    props.styleType === "skyway" &&
+    props.type === "skyway" &&
     css`
       background-color: #9500ff;
     `}
 
     ${(props) =>
-    props.styleType === "sidewalk" &&
+    props.type === "sidewalk" &&
     css`
       background-color: #0ca8ff;
     `}

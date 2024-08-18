@@ -1,22 +1,19 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { TouchableOpacityProps } from "react-native";
 import { Container, ChipText, Circle } from "./styles";
 
-export interface CustomChipProps {
+interface CustomChipProps extends TouchableOpacityProps {
   label: string;
-  onPress?: () => void;
   type?: "default" | "tunnel" | "skyway" | "sidewalk";
 }
 
 const CustomChip: React.FC<CustomChipProps> = (props: CustomChipProps) => {
-  const { label, onPress, type = "default" } = props;
+  const { label, type = "default", ...touchableOpacityProps } = props;
   return (
-    <TouchableOpacity onPress={onPress}>
-      <Container styleType={type}>
-        <Circle styleType={type} />
-        <ChipText styleType={type}>{label}</ChipText>
-      </Container>
-    </TouchableOpacity>
+    <Container type={type} {...touchableOpacityProps}>
+      {type !== "default" && <Circle type={type} />}
+      <ChipText type={type}>{label}</ChipText>
+    </Container>
   );
 };
 
