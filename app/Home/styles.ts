@@ -1,14 +1,36 @@
-import MapView from "react-native-maps";
+import { TouchableOpacity } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import styled from "styled-components/native";
 
 export const Container = styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
 `;
 
 export const Map = styled(MapView)`
-    flex: 1;
-    width: 1000px;
-    height: 1000px;
-`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+`;
+
+export const Content = styled.SafeAreaView`
+  z-index: 1;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  justify-content: space-between;
+`;
+
+export const LocButton = styled(Marker)`
+  align-items: center;
+  align-self: center;
+`;
+
+export const CustomMark = styled(Marker)`
+  align-items: center;
+  align-self: center;
+`;
