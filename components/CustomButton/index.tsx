@@ -1,15 +1,16 @@
-import React from 'react';
-import { Container, Mask, MaskWrapper } from './styles';
-import { StyledText } from '../../styles/global';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { useTheme } from 'styled-components/native';
-import MaskedView from '@react-native-masked-view/masked-view';
+import React, { ComponentProps } from "react";
+import { Container, Mask, MaskWrapper } from "./styles";
+import { StyledText } from "../../styles/global";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { useTheme } from "styled-components/native";
+import MaskedView from "@react-native-masked-view/masked-view";
 
 interface CustomButtonProps extends React.ComponentProps<typeof Container> {
   label: string;
   loadingLabel?: string;
   CustomIcon?: React.ReactNode;
   loadingProgress?: number;
+  outerContainerStyle: ComponentProps<typeof MaskedView>["style"];
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -17,6 +18,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   disabled,
   loadingLabel,
   style,
+  outerContainerStyle,
   variant,
   CustomIcon,
   loading,
@@ -26,11 +28,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   const theme = useTheme();
   return (
     <MaskedView
+      style={outerContainerStyle}
       maskElement={
         <MaskWrapper>
           <Mask
             style={{
-              transform: [{ scaleX: loading ? loadingProgress ?? 0 : 1 }],
+              transform: [{ scaleX: loading ? (loadingProgress ?? 0) : 1 }],
             }}
           />
         </MaskWrapper>
@@ -41,9 +44,9 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         disabled={loading || disabled}
         style={({ pressed }) => ({
           ...(pressed ? { opacity: 0.8 } : {}),
-          ...((typeof style === 'function'
+          ...((typeof style === "function"
             ? style({ pressed })
-            : style) as Object),
+            : style) as object),
         })}
         variant={variant}
       >
@@ -51,7 +54,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
           variant="normal"
           weight={700}
           style={{
-            color: variant === 'outlined' ? theme.colors.primaryMain : 'white',
+            color: variant === "outlined" ? theme.colors.primaryMain : "white",
           }}
         >
           {loading ? loadingLabel || label : label}
@@ -59,7 +62,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         {loading ? (
           <FontAwesome5
             name="hourglass"
-            color={variant === 'outlined' ? theme.colors.primaryMain : 'white'}
+            color={variant === "outlined" ? theme.colors.primaryMain : "white"}
             size={20}
           />
         ) : (

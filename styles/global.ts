@@ -32,3 +32,12 @@ export const StyledText = styled.Text<StyledTextProps>`
   color: ${({ theme }) => theme.colors.contrast};
 `;
 // * StyledText <<<<<<
+
+export const BottomSheetHandle = styled.View`
+  height: 5px;
+  width: 50px;
+  background-color: ${({ theme }) => theme.colors.neutral};
+  align-self: center;
+  border-radius: 8px;
+  margin-vertical: 8px;
+`;
