@@ -15,7 +15,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import fontObject from "../../assets/fonts";
-
+import TunnelEntrance from "../../components/TunnelEntrance";
 import { Container, Map, LocButton, Content, CustomMark } from "./styles";
 import Splash from "../Splash";
 import { LocationSubscriber } from "expo-location/build/LocationSubscribers";
@@ -23,6 +23,7 @@ import DirectionsHeader from "../../components/DirectionsHeader";
 import SearchBar from "../../components/Searchbar";
 import DirectionsModal from "../../components/DirectionsModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 export interface types {
   newText: string;
 }
@@ -31,24 +32,20 @@ SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
   const [fontsLoaded, fontsError] = useFonts(fontObject);
-  // State to get the current user location
-  const [location, setLocation] = useState<Location.LocationObject | null>(
-    null,
-  );
-  // State to get the current location of the current user view
+  const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [region, setRegion] = useState({
     latitude: 44.97565862446892,
     longitude: -93.23372512269837,
     latitudeDelta: 0.02,
     longitudeDelta: 0.02,
   });
-  const [heading, setHeading] = useState<number | null>(null); // Sttate to get the current heading position
-  const [errorMsg, setErrorMsg] = useState<string | null>(null); // State to track errors
-  const [zoomLevel, setZoomLevel] = useState(0); // State to track zoom level
+  const [heading, setHeading] = useState<number | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [zoomLevel, setZoomLevel] = useState(0);
   const [markerSize, setMarkerSize] = useState(56);
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
+  const [showTunnelEntrance, setShowTunnelEntrance] = useState({});
   const mapRef = useRef<any>();
-  // const size = zoomLevel <= 10 ? 20 : 30;
 
   const focusMap = () => {
     if (location) {
@@ -61,7 +58,21 @@ export default function Home() {
       });
     }
   };
-  // TODO: @limetheman merge these calls to `useEffect` (they both have the same dependency array)
+
+  const toggleTunnelEntrance = useCallback((markerId) => {
+    setShowTunnelEntrance(prev => ({
+      ...prev,
+      [markerId]: !prev[markerId]
+    }));
+  }, []);
+
+  const closeTunnelEntrance = useCallback((markerId) => {
+    setShowTunnelEntrance(prev => ({
+      ...prev,
+      [markerId]: false
+    }));
+  }, []);
+
   useEffect(() => {
     const getLocation = async () => {
       try {
@@ -79,9 +90,7 @@ export default function Home() {
       }
     };
 
-    // Call getLocation initially
     getLocation();
-
     setInterval(getLocation, 1000);
   }, []);
 
@@ -96,12 +105,10 @@ export default function Home() {
       }
     };
 
-    // Call getHeading initially
     getHeading();
   }, []);
 
   const handleRegionChange = (newRegion: any) => {
-    // Calculate zoom level based on latitudeDelta
     const newZoomLevel = Math.log2(360 / newRegion.longitudeDelta);
     setMarkerSize(Math.pow(1.6, zoomLevel) / 20);
     setZoomLevel(newZoomLevel);
@@ -125,9 +132,7 @@ export default function Home() {
         {location && (
           <>
             <Map
-              // Specifies the location of the initial view screen
               initialRegion={region}
-              // OnRegionChangeComplete runs when the user stops dragging the map view, our callback function uses this and sets the current region to the location of the screen where the user stopped
               onRegionChange={(region) => {
                 handleRegionChange(region);
               }}
@@ -145,7 +150,7 @@ export default function Home() {
                   latitude: location.coords.latitude,
                   longitude: location.coords.longitude,
                 }}
-                rotation={heading || 0} // Set the rotation of the marker based on the user's heading
+                rotation={heading || 0}
                 onPress={focusMap}
                 anchor={{ x: 0.5, y: 0.5 }}
               >
@@ -162,8 +167,23 @@ export default function Home() {
                 tracksViewChanges={false}
                 anchor={{ x: 0.5, y: 0.5 }}
                 calloutAnchor={{ x: 0.5, y: 0.2 }}
+                onPress={() => toggleTunnelEntrance('morrillHall')}
               >
-                <CustomMarker width={markerSize} height={markerSize} />
+                {showTunnelEntrance['morrillHall'] ? (
+                  <TunnelEntrance
+                    floor={2}
+                    building="Morrill Hall"
+                    coordinate={{
+                      latitude: 44.97588,
+                      longitude: -93.2345,
+                    }}
+                    onPress={() => toggleTunnelEntrance('morrillHall')}
+                    onClose={() => closeTunnelEntrance('morrillHall')}
+                    // imageSrc="https://example.com/morrill-hall-tunnel.jpg" // Uncomment and add image URL when available
+                  />
+                ) : (
+                  <CustomMarker width={markerSize} height={markerSize} />
+                )}
               </CustomMark>
 
               <CustomMark
@@ -176,8 +196,23 @@ export default function Home() {
                 tracksViewChanges={false}
                 anchor={{ x: 0.5, y: 0.5 }}
                 calloutAnchor={{ x: 0.5, y: 0.2 }}
+                onPress={() => toggleTunnelEntrance('tateHall')}
               >
-                <CustomMarker width={markerSize} height={markerSize} />
+                {showTunnelEntrance['tateHall'] ? (
+                  <TunnelEntrance
+                    floor={1}
+                    building="Tate Hall"
+                    coordinate={{
+                      latitude: 44.9753,
+                      longitude: -93.23454,
+                    }}
+                    onPress={() => toggleTunnelEntrance('tateHall')}
+                    onClose={() => closeTunnelEntrance('tateHall')}
+                    // imageSrc="https://example.com/tate-hall-tunnel.jpg" // Uncomment and add image URL when available
+                  />
+                ) : (
+                  <CustomMarker width={markerSize} height={markerSize} />
+                )}
               </CustomMark>
 
               <MapPolyline
@@ -197,7 +232,7 @@ export default function Home() {
                 ]}
                 strokeWidth={5}
                 geodesic={true}
-              ></MapPolyline>
+              />
             </Map>
             <Content pointerEvents="box-none">
               <SearchBar />
@@ -217,21 +252,6 @@ export default function Home() {
             </Content>
           </>
         )}
-        {/* <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current user latitude: {location.coords.latitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current user longitude: {location.coords.longitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current latitude: {region.latitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current longitude: {region.longitude}
-      </Text> */}
       </GestureHandlerRootView>
     </Container>
   );
