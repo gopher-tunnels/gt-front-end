@@ -4,16 +4,19 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",
     "@react-native-masked-view/masked-view": "^0.3.1",
+    "@rnmapbox/maps": "^10.1.28",
     "dayjs": "^1.11.12",
+    "eas-cli": "^11.0.1",
     "expo": "~51.0.28",
     "expo-constants": "~16.0.2",
+    "expo-dev-client": "^4.0.25",
     "expo-font": "~12.0.9",
     "expo-linking": "~6.3.1",
     "expo-location": "~17.0.1",

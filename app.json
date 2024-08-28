@@ -1,6 +1,8 @@
 {
   "expo": {
-    "permissions": ["motion"],
+    "permissions": [
+      "motion"
+    ],
     "name": "gt-front-end",
     "slug": "gt-front-end",
     "version": "1.0.0",
@@ -12,7 +14,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -20,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.gtfrontend"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -47,7 +52,21 @@
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBoldItalic.ttf"
           ]
         }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZnV6enkyMjY2IiwiYSI6ImNtMGQzaWFqZjA0OTIycXB3YmUyZW42a2kifQ.OrseslYRvmsL6_o4DxV8-w"
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "56f6e6cb-c147-432d-bada-b229ac048dd3"
+      }
+    }
   }
 }

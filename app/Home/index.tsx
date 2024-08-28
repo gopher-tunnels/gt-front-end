@@ -14,6 +14,9 @@ import CustomChip from "../../components/CustomChip";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import MapboxGL from '@rnmapbox/maps';
+import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
+
 import fontObject from "../../assets/fonts";
 
 import { Container, Map, LocButton, Content, CustomMark } from "./styles";
@@ -27,6 +30,7 @@ export interface types {
 }
 
 SplashScreen.preventAutoHideAsync();
+MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
 export default function Home() {
   const [fontsLoaded, fontsError] = useFonts(fontObject);
@@ -119,112 +123,19 @@ export default function Home() {
   }
 
   return (
-    <Container onLayout={onLayoutRootView}>
-      {location && (
-        <>
-          <Map
-            // Specifies the location of the initial view screen
-            initialRegion={region}
-            // OnRegionChangeComplete runs when the user stops dragging the map view, our callback function uses this and sets the current region to the location of the screen where the user stopped
-            onRegionChange={(region) => {
-              handleRegionChange(region);
-            }}
-            showsUserLocation={false}
-            showsMyLocationButton={false}
-            showsBuildings={true}
-            userInterfaceStyle="light"
-            provider={
-              Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT
-            }
-            ref={mapRef}
-          >
-            <LocButton
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              rotation={heading || 0} // Set the rotation of the marker based on the user's heading
-              onPress={focusMap}
-              anchor={{ x: 0.5, y: 0.5 }}
-            >
-              <LocationButton width={70} height={70} />
-            </LocButton>
-
-            <CustomMark
-              coordinate={{
-                latitude: 44.97588,
-                longitude: -93.2345, // Morrill Hall
-              }}
-              title={"Morrill Hall"}
-              description={"test test test test test"}
-              tracksViewChanges={false}
-              anchor={{ x: 0.5, y: 0.5 }}
-              calloutAnchor={{ x: 0.5, y: 0.2 }}
-            >
-              <CustomMarker width={markerSize} height={markerSize} />
-            </CustomMark>
-
-            <CustomMark
-              coordinate={{
-                latitude: 44.9753,
-                longitude: -93.23454,
-              }}
-              title={"Tate Hall"}
-              description={"physics building"}
-              tracksViewChanges={false}
-              anchor={{ x: 0.5, y: 0.5 }}
-              calloutAnchor={{ x: 0.5, y: 0.2 }}
-            >
-              <CustomMarker width={markerSize} height={markerSize} />
-            </CustomMark>
-
-            <MapPolyline
-              coordinates={[
-                {
-                  latitude: location.coords.latitude,
-                  longitude: location.coords.longitude,
-                },
-                { latitude: 44.97565862446892, longitude: -93.23372512269837 },
-                { latitude: 44.97565862446895, longitude: -93.23372512269835 },
-              ]}
-              strokeWidth={5}
-              geodesic={true}
-            ></MapPolyline>
-          </Map>
-          <Content pointerEvents="box-none">
-            <SearchBar />
-            <TouchableOpacity
-              onPress={focusMap}
-              style={{
-                position: "absolute",
-                bottom: 20,
-                right: 20,
-                backgroundColor: "white",
-                padding: 10,
-                borderRadius: 10,
-              }}
-            >
-              <Text>Focus to Current Location</Text>
-            </TouchableOpacity>
-            {/* <DirectionsModal /> */}
-          </Content>
-        </>
-      )}
-      {/* <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        heading: {heading !== null ? heading.toFixed(2) : 'Loading...'}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current user latitude: {location.coords.latitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current user longitude: {location.coords.longitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current latitude: {region.latitude}
-      </Text>
-      <Text style={{ fontFamily: 'PlusJakartaSans-Regular' }}>
-        Current longitude: {region.longitude}
-      </Text> */}
+    <Container>
+      <Map>
+        <MapboxGL.MapView style={{ flex: 1 }}>
+          <MapboxGL.Camera
+            zoomLevel={8}
+            centerCoordinate={[location?.coords.longitude, location?.coords.latitude]}
+          />
+          <MapboxGL.UserLocation visible={true} />
+        </MapboxGL.MapView>
+      </Map>
+      <Content>
+        {/* Other components like LocationButton, CustomMarker, etc. */}
+      </Content>
     </Container>
   );
 }
