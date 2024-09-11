@@ -1,24 +1,20 @@
 {
   "expo": {
-    "permissions": [
-      "motion"
-    ],
     "name": "gt-front-end",
     "slug": "gt-front-end",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.adcumn.gophertunnels"
     },
     "android": {
       "adaptiveIcon": {
@@ -57,6 +53,12 @@
         "@rnmapbox/maps",
         {
           "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZnV6enkyMjY2IiwiYSI6ImNtMGQzaWFqZjA0OTIycXB3YmUyZW42a2kifQ.OrseslYRvmsL6_o4DxV8-w"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Show current location on map."
         }
       ]
     ],
