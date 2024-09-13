@@ -1,12 +1,6 @@
 import React, { ComponentProps, useEffect, useState } from "react";
-import { Keyboard, ScrollView, TextInput } from "react-native";
-import {
-  Bar,
-  Container,
-  MagnifyingGlass,
-  SearchInput,
-  SearchResultContainer,
-} from "./styles";
+import { Dimensions, Keyboard, ScrollView, TextInput } from "react-native";
+import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -95,8 +89,8 @@ export default function Searchbar(props: Props) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        style={{ paddingTop: 6 }}
-        contentContainerStyle={{ gap: 6 }}
+        style={{ paddingTop: 6, marginHorizontal: -16 }}
+        contentContainerStyle={{ gap: 6, paddingHorizontal: 16 }}
       >
         {popularDestinations.map((destination) => (
           <CustomChip
