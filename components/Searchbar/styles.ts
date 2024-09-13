@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { TextInput } from "react-native";
 
 export const Container = styled.View`
   margin-left: 16px;
@@ -15,7 +16,7 @@ export const Bar = styled.View`
   border-radius: 32px;
 `;
 
-export const SearchInput = styled.TextInput`
+export const SearchInput = styled(TextInput)`
   font-family: PlusJakartaSans-Medium;
   flex: 1;
   font-size: 18px;
