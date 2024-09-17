@@ -47,12 +47,6 @@ if (getRNMinorVersion() >= 75) {
 rootProject.name = 'gt-front-end'
 
 dependencyResolutionManagement {
-  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-  repositories {
-    google()
-    mavenCentral()
-    jcenter()
-  }
   versionCatalogs {
     reactAndroidLibs {
       from(files(new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../gradle/libs.versions.toml")))

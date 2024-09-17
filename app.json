@@ -1,8 +1,5 @@
 {
   "expo": {
-    "permissions": [
-      "motion"
-    ],
     "name": "gt-front-end",
     "slug": "gt-front-end",
     "version": "1.0.0",

@@ -124,18 +124,15 @@ export default function Home() {
 
   return (
     <Container>
-      <Map>
+      
         <MapboxGL.MapView style={{ flex: 1 }}>
           <MapboxGL.Camera
-            zoomLevel={8}
-            centerCoordinate={[location?.coords.longitude, location?.coords.latitude]}
+            
+            // centerCoordinate={[location?.coords.longitude, location?.coords.latitude]}
           />
           <MapboxGL.UserLocation visible={true} />
         </MapboxGL.MapView>
-      </Map>
-      <Content>
-        {/* Other components like LocationButton, CustomMarker, etc. */}
-      </Content>
+    
     </Container>
   );
 }
