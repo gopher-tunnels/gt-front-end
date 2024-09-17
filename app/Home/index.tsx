@@ -14,7 +14,7 @@ import CustomChip from "../../components/CustomChip";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import MapboxGL from '@rnmapbox/maps';
+import MapboxGL from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
 
 import fontObject from "../../assets/fonts";
