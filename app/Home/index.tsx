@@ -16,7 +16,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import MapboxGL from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
-
+import { MarkerView, PointAnnotation } from "@rnmapbox/maps";
 import fontObject from "../../assets/fonts";
 
 import { Container, Map, LocButton, Content, CustomMark } from "./styles";
@@ -38,6 +38,9 @@ export default function Home() {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
+
+  const [coordinates] = useState([40, -90]);
+
   // State to get the current location of the current user view
   const [region, setRegion] = useState({
     latitude: 44.97565862446892,
@@ -122,15 +125,24 @@ export default function Home() {
     return null;
   }
 
+  
+
   return (
     <Container>
-      
-        <MapboxGL.MapView style={{ flex: 1 }}>
-          <MapboxGL.Camera
-            
-            // centerCoordinate={[location?.coords.longitude, location?.coords.latitude]}
-          />
+        <SearchBar />
+        <MapboxGL.MapView style={{ flex: 1 , position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1}}
+        styleURL="mapbox://styles/mapbox/navigation-day-v1">
+        <MapboxGL.Camera
+          
+        />
           <MapboxGL.UserLocation visible={true} />
+          <MapboxGL.PointAnnotation id="custom-marker" coordinate={[0,0]}>
+          <View style={{ backgroundColor: 'red', width: 30, height: 30, borderRadius: 15 }} />
+        </MapboxGL.PointAnnotation>
+
+         
+         
+          
         </MapboxGL.MapView>
     
     </Container>

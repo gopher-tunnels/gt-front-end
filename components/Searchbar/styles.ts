@@ -13,6 +13,7 @@ export const Bar = styled.View`
   padding: 14px 24px;
   border: 1px solid;
   border-radius: 32px;
+  margin-top: 30px;
 `;
 
 export const SearchInput = styled.TextInput`
