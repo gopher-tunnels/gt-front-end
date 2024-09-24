@@ -128,7 +128,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Content>
+      <Content pointerEvents="none">
         <SearchBar />
       </Content>
       <MapboxGL.MapView
