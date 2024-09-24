@@ -125,25 +125,27 @@ export default function Home() {
     return null;
   }
 
-  
-
   return (
     <Container>
+      <Content>
         <SearchBar />
-        <MapboxGL.MapView style={{ flex: 1 , position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1}}
-        styleURL="mapbox://styles/mapbox/outdoors-v12">
-        <MapboxGL.Camera
-          
-        />
-          <MapboxGL.UserLocation visible={true} />
-          <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello"/>
-          
-
-         
-         
-          
-        </MapboxGL.MapView>
-    
+      </Content>
+      <MapboxGL.MapView
+        style={{
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+        }}
+        styleURL="mapbox://styles/mapbox/outdoors-v12"
+      >
+        <MapboxGL.Camera />
+        <MapboxGL.UserLocation visible={true} />
+        <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
+      </MapboxGL.MapView>
     </Container>
   );
 }
