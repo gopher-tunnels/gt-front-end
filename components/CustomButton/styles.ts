@@ -1,8 +1,8 @@
-import { MotiView } from 'moti';
-import styled from 'styled-components/native';
+import { MotiView } from "moti";
+import styled from "styled-components/native";
 
 interface ContainerProps {
-  variant?: 'filled' | 'outlined';
+  variant?: "filled" | "outlined";
   loading?: boolean;
 }
 
@@ -12,10 +12,10 @@ export const Container = styled.Pressable<ContainerProps>`
   align-items: center;
   justify-content: center;
   background-color: ${({ variant, theme }) =>
-    variant === 'outlined' ? 'transparent' : theme.colors.primaryMain};
+    variant === "outlined" ? "transparent" : theme.colors.primaryMain};
   border: ${({ variant, theme }) =>
-    variant === 'outlined' ? `1px solid ${theme.colors.primaryMain}` : 'none'};
-  max-width: 360px;
+    variant === "outlined" ? `1px solid ${theme.colors.primaryMain}` : "none"};
+  /* max-width: 360px; */
   height: 48px;
   border-radius: 8px;
   gap: ${({ loading }) => (loading ? 12 : 8)}px;

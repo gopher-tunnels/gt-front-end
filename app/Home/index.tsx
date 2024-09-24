@@ -25,6 +25,7 @@ import { LocationSubscriber } from "expo-location/build/LocationSubscribers";
 import DirectionsHeader from "../../components/DirectionsHeader";
 import SearchBar from "../../components/Searchbar";
 import DirectionsModal from "../../components/DirectionsModal";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 export interface types {
   newText: string;
 }
