@@ -20,11 +20,12 @@ export const LegendContainer = styled.View`
 `;
 
 export const PreNavContainer = styled.View`
-  gap: 24px;
+  /* gap: 24px; */
 `;
 
 export const InfoContainer = styled.View`
   gap: 8px;
+  overflow: hidden;
 `;
 
 export const NavInfoContainer = styled.View`
