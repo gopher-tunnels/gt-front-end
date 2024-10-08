@@ -34,6 +34,7 @@ import {
 } from "react-native-gesture-handler";
 import Animated, {
   Easing,
+  SlideInDown,
   useSharedValue,
   withSpring,
   withTiming,
@@ -55,6 +56,8 @@ const Clock = (
 const Go = <MaterialIcons name="route" color="white" size={24} />;
 
 const AnimatedInfoContainer = Animated.createAnimatedComponent(InfoContainer);
+
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
 /**
  * @description Component from which the user can control and see information about their route and destination. Designed to appear on the bottom of the screen.
@@ -183,7 +186,9 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   }, [navigationActive]);
 
   return (
-    <Container>
+    <AnimatedContainer
+      entering={SlideInDown.duration(500).easing(Easing.out(Easing.exp))}
+    >
       <Animated.View
         style={{ transform: [{ translateY: bottomSheetTranslation }] }}
       >
@@ -294,7 +299,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
           />
         </PreNavContainer>
       </Content>
-    </Container>
+    </AnimatedContainer>
   );
 };
 

@@ -12,6 +12,7 @@ import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import CustomChip from "../CustomChip";
 import { Destination } from "../../@types/api";
+import Animated, { Easing, SlideInUp } from "react-native-reanimated";
 
 type BuildingInfo = ComponentProps<typeof SearchResult>["building"];
 
@@ -27,9 +28,13 @@ const TEMP_BUILDINGS: BuildingInfo[] = [
   },
 ];
 
-interface Props {}
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
-export default function Searchbar(props: Props) {
+interface Props {
+  onSelectDestination: (dest: string) => void;
+}
+
+const Searchbar: React.FC<Props> = ({ onSelectDestination }) => {
   const theme = useTheme();
   const [inputText, updateInputText] = React.useState("");
   const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>(
@@ -56,7 +61,10 @@ export default function Searchbar(props: Props) {
     inputRef.current?.isFocused() && buildingResults.length > 0;
 
   return (
-    <Container>
+    <AnimatedContainer
+      entering={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+    >
       <Bar
         style={{
           borderColor: showResults
@@ -103,9 +111,12 @@ export default function Searchbar(props: Props) {
             key={destination.id}
             label={destination.name}
             type="default"
+            onPress={() => onSelectDestination(destination.name)}
           />
         ))}
       </ScrollView>
-    </Container>
+    </AnimatedContainer>
   );
-}
+};
+
+export default Searchbar;
