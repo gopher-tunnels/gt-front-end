@@ -14,6 +14,9 @@ import CustomChip from "../../components/CustomChip";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import MapboxGL from "@rnmapbox/maps";
+import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
+import { MarkerView, PointAnnotation } from "@rnmapbox/maps";
 import fontObject from "../../assets/fonts";
 import TunnelEntrance from "../../components/TunnelEntrance";
 import { Container, Map, LocButton, Content, CustomMark } from "./styles";
@@ -29,10 +32,22 @@ export interface types {
 }
 
 SplashScreen.preventAutoHideAsync();
+MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
 export default function Home() {
   const [fontsLoaded, fontsError] = useFonts(fontObject);
+<<<<<<< HEAD
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
+=======
+  // State to get the current user location
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null,
+  );
+
+  const [coordinates] = useState([40, -90]);
+
+  // State to get the current location of the current user view
+>>>>>>> 3c6db50e75adc0401cfee1ecc6adbbea2fbea9fc
   const [region, setRegion] = useState({
     latitude: 44.97565862446892,
     longitude: -93.23372512269837,
@@ -127,6 +142,7 @@ export default function Home() {
   }
 
   return (
+<<<<<<< HEAD
     <Container onLayout={onLayoutRootView}>
       <GestureHandlerRootView>
         {location && (
@@ -253,6 +269,28 @@ export default function Home() {
           </>
         )}
       </GestureHandlerRootView>
+=======
+    <Container>
+      <Content pointerEvents="none">
+        <SearchBar />
+      </Content>
+      <MapboxGL.MapView
+        style={{
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+        }}
+        styleURL="mapbox://styles/mapbox/outdoors-v12"
+      >
+        <MapboxGL.Camera />
+        <MapboxGL.UserLocation visible={true} />
+        <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
+      </MapboxGL.MapView>
+>>>>>>> 3c6db50e75adc0401cfee1ecc6adbbea2fbea9fc
     </Container>
   );
 }
