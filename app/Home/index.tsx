@@ -26,6 +26,7 @@ import DirectionsHeader from "../../components/DirectionsHeader";
 import SearchBar from "../../components/Searchbar";
 import DirectionsModal from "../../components/DirectionsModal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets, SafeAreaProvider } from "react-native-safe-area-context";
 export interface types {
   newText: string;
 }
@@ -126,27 +127,29 @@ export default function Home() {
     return null;
   }
 
+
+  const insets = useSafeAreaInsets();
   return (
-    <Container>
-      <Content pointerEvents="none">
-        <SearchBar />
-      </Content>
-      <MapboxGL.MapView
-        style={{
-          flex: 1,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: -1,
-        }}
-        styleURL="mapbox://styles/mapbox/outdoors-v12"
-      >
-        <MapboxGL.Camera />
-        <MapboxGL.UserLocation visible={true} />
-        <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
-      </MapboxGL.MapView>
-    </Container>
+      <Container>
+        <Content pointerEvents="box-none" style={{ paddingTop: insets.top }}>
+          <SearchBar />
+        </Content>
+        <MapboxGL.MapView
+          style={{
+            flex: 1,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: -1,
+          }}
+          styleURL="mapbox://styles/mapbox/outdoors-v12"
+        >
+          <MapboxGL.Camera />
+          <MapboxGL.UserLocation visible={true} />
+          <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
+        </MapboxGL.MapView>
+      </Container>
   );
 }
