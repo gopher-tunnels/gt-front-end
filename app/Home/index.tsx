@@ -1,31 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Alert, Platform, Text, TouchableOpacity, View } from "react-native";
-import MapView, {
-  MapPolyline,
-  Marker,
-  PROVIDER_DEFAULT,
-  PROVIDER_GOOGLE,
-  Polyline,
-} from "react-native-maps";
 import * as Location from "expo-location";
-import LocationButton from "../../components/LocationButton";
 import CustomMarker from "../../components/CustomMarker";
-import CustomChip from "../../components/CustomChip";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import MapboxGL from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
-import { MarkerView, PointAnnotation } from "@rnmapbox/maps";
 import fontObject from "../../assets/fonts";
 
-import { Container, Map, LocButton, Content, CustomMark } from "./styles";
-import Splash from "../Splash";
-import { LocationSubscriber } from "expo-location/build/LocationSubscribers";
-import DirectionsHeader from "../../components/DirectionsHeader";
+import { Container, Content } from "./styles";
 import SearchBar from "../../components/Searchbar";
-import DirectionsModal from "../../components/DirectionsModal";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 export interface types {
   newText: string;
 }
@@ -51,7 +35,6 @@ export default function Home() {
   });
   const [heading, setHeading] = useState<number | null>(null); // Sttate to get the current heading position
   const [errorMsg, setErrorMsg] = useState<string | null>(null); // State to track errors
-  const [zoomLevel, setZoomLevel] = useState(0); // State to track zoom level
   const [markerSize, setMarkerSize] = useState(56);
   const [isPermissionGranted, setIsPermissionGranted] = useState(false);
   const mapRef = useRef<any>();
@@ -107,14 +90,6 @@ export default function Home() {
     getHeading();
   }, []);
 
-  const handleRegionChange = (newRegion: any) => {
-    // Calculate zoom level based on latitudeDelta
-    const newZoomLevel = Math.log2(360 / newRegion.longitudeDelta);
-    setMarkerSize(Math.pow(1.6, zoomLevel) / 20);
-    setZoomLevel(newZoomLevel);
-    setRegion(newRegion);
-  };
-
   const onLayoutRootView = useCallback(async () => {
     if (fontsError) console.warn(fontsError);
     if ((fontsLoaded || fontsError) && location) {
@@ -129,7 +104,7 @@ export default function Home() {
   return (
     <Container>
       <Content pointerEvents="box-none">
-      <SearchBar />
+        <SearchBar />
       </Content>
       
       <MapboxGL.MapView

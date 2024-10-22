@@ -39,6 +39,7 @@ const DirectionsHeader: React.FC<DirectionsHeaderProps> = ({
           (direction, index) =>
             index <= current + 1 && (
               <DirectionContainer
+                key={index}
                 type={direction}
                 animate={index < current ? { height: 0 } : {}}
                 nextVariant={current < index}
