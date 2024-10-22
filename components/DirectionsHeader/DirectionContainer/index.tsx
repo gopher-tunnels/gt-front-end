@@ -1,29 +1,29 @@
-import React from 'react';
-import { Container, Label, Progress } from './styles';
-import Indicator from './Indicator';
-import { StyleProp, ViewStyle } from 'react-native';
-import { DirectionsHeaderProps } from '..';
+import React from "react";
+import { Container, Label, Progress } from "./styles";
+import Indicator from "./Indicator";
+import { StyleProp, ViewStyle } from "react-native";
+import { DirectionsHeaderProps } from "..";
 
 const directionLabels = {
-  right: 'Take a right',
-  left: 'Take a left',
-  forward: 'Head straight',
-  enter: 'Enter the tunnel',
+  right: "Take a right",
+  left: "Take a left",
+  forward: "Head straight",
+  enter: "Enter the tunnel",
 };
 
 interface DirectionContainerProps {
-  type: DirectionsHeaderProps['directions'][number]; //TODO: unify with IndicatorProps
+  type: DirectionsHeaderProps["directions"][number]; //TODO: unify with IndicatorProps
   progress?: number;
   nextVariant?: boolean;
   style?: StyleProp<ViewStyle>;
-  animate?: React.ComponentProps<typeof Container>['animate'];
-  transition?: React.ComponentProps<typeof Container>['transition'];
+  animate?: React.ComponentProps<typeof Container>["animate"];
+  transition?: React.ComponentProps<typeof Container>["transition"];
 }
 
 const DirectionContainer: React.FC<DirectionContainerProps> = ({
   type,
-  progress,
-  nextVariant,
+  progress = 0,
+  nextVariant = false,
   animate,
   transition,
   ...props
@@ -33,13 +33,13 @@ const DirectionContainer: React.FC<DirectionContainerProps> = ({
       nextVariant={nextVariant ?? false}
       from={{ transform: [{ translateX: nextVariant ? 200 : 0 }] }}
       animate={{
-        width: nextVariant ? '55%' : '100%',
+        width: nextVariant ? "55%" : "100%",
         height: nextVariant ? 40 : 80,
         borderRadius: nextVariant ? 10 : 20,
         transform: [{ translateX: 0 }],
         ...animate,
       }}
-      transition={{ type: 'timing', ...transition }}
+      transition={{ type: "timing", ...transition }}
       {...props}
     >
       <Label
@@ -52,7 +52,7 @@ const DirectionContainer: React.FC<DirectionContainerProps> = ({
           transform: [{ scaleX: nextVariant ? 1 : 0 }],
           // fontSize: nextVariant ? 16 : 24,
         }}
-        transition={{ type: 'timing' }}
+        transition={{ type: "timing" }}
       >
         Then
       </Label>
@@ -66,18 +66,13 @@ const DirectionContainer: React.FC<DirectionContainerProps> = ({
           transform: [{ scale: nextVariant ? 1 : 1.5 }],
           // fontSize: nextVariant ? 16 : 24,
         }}
-        transition={{ type: 'timing' }}
+        transition={{ type: "timing" }}
       >
         {directionLabels[type]}
       </Label>
       <Progress animate={{ transform: [{ scaleX: progress ?? 0 }] }} />
     </Container>
   );
-};
-
-DirectionContainer.defaultProps = {
-  progress: 0,
-  nextVariant: false,
 };
 
 export default DirectionContainer;
