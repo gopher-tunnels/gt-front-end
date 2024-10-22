@@ -1,41 +1,30 @@
 import React, { ComponentProps, useEffect, useState } from "react";
 import { Keyboard, ScrollView, TextInput } from "react-native";
-import {
-  Bar,
-  Container,
-  MagnifyingGlass,
-  SearchInput,
-  SearchResultContainer,
-} from "./styles";
+import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import CustomChip from "../CustomChip";
 import { Destination } from "../../@types/api";
+import Animated, { Easing, SlideInUp } from "react-native-reanimated";
 
 type BuildingInfo = ComponentProps<typeof SearchResult>["building"];
 
-const TEMP_BUILDINGS: BuildingInfo[] = [
-  {
-    name: "Ralph Rapson Hall",
-    address: "89 Church St SE, Minneapolis, MN 55455",
-  },
-  { name: "Akerman Hall", address: "110 Union St SE, Minneapolis, MN 55455" },
-  {
-    name: "Coffman Memorial Union",
-    address: "300 Washington Avenue SE, Minneapolis",
-  },
-];
+const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
-interface Props {}
+interface SearchbarProps {
+  // TODO: make required and modify logic to work with backend
+  onSelectDestination?: (dest: string) => void;
+}
 
-export default function Searchbar(props: Props) {
+const Searchbar: React.FC<SearchbarProps> = () => {
   const theme = useTheme();
   const [inputText, updateInputText] = React.useState("");
   const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>(
     [],
   ); // switch to TEMP_BUILDINGS to test
   const [popularDestinations, setPopularDestinations] = useState<Destination[]>(
+    // TODO: set to value from backend
     [
       { id: "Akerman Hall", name: "Akerman Hall" },
       { id: "Tate Hall", name: "Tate Hall" },
@@ -56,7 +45,10 @@ export default function Searchbar(props: Props) {
     inputRef.current?.isFocused() && buildingResults.length > 0;
 
   return (
-    <Container>
+    <AnimatedContainer
+      entering={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+    >
       <Bar
         style={{
           borderColor: showResults
@@ -106,6 +98,8 @@ export default function Searchbar(props: Props) {
           />
         ))}
       </ScrollView>
-    </Container>
+    </AnimatedContainer>
   );
-}
+};
+
+export default Searchbar;
