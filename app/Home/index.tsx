@@ -106,6 +106,7 @@ export default function Home() {
       <Content pointerEvents="box-none">
         <SearchBar />
       </Content>
+      
       <MapboxGL.MapView
         style={{
           flex: 1,
@@ -118,7 +119,14 @@ export default function Home() {
         }}
         styleURL="mapbox://styles/mapbox/outdoors-v12"
       >
-        <MapboxGL.Camera />
+        <MapboxGL.Camera
+          defaultSettings={{
+            zoomLevel: 15,
+            centerCoordinate: [-93.234727, 44.974494], // centerns on campus if no location
+          }}
+        followZoomLevel={14}
+        followUserLocation={true} 
+        />
         <MapboxGL.UserLocation visible={true} />
         <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
       </MapboxGL.MapView>
