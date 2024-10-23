@@ -10,6 +10,9 @@ import fontObject from "../../assets/fonts";
 
 import { Container, Content } from "./styles";
 import SearchBar from "../../components/Searchbar";
+import DirectionsModal from "../../components/DirectionsModal";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets, SafeAreaProvider } from "react-native-safe-area-context";
 export interface types {
   newText: string;
 }
@@ -101,25 +104,27 @@ export default function Home() {
     return null;
   }
 
+
+  const insets = useSafeAreaInsets();
   return (
-    <Container>
-      <Content pointerEvents="box-none">
-        <SearchBar />
-      </Content>
-      
+      <Container>
+        <Content pointerEvents="box-none" style={{ paddingTop: insets.top }}>
+          <SearchBar />
+        </Content>
+        
       <MapboxGL.MapView
-        style={{
-          flex: 1,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          zIndex: -1,
-        }}
-        styleURL="mapbox://styles/mapbox/outdoors-v12"
-      >
-        <MapboxGL.Camera
+          style={{
+            flex: 1,
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: -1,
+          }}
+          styleURL="mapbox://styles/mapbox/outdoors-v12"
+        >
+          <MapboxGL.Camera
           defaultSettings={{
             zoomLevel: 15,
             centerCoordinate: [-93.234727, 44.974494], // centerns on campus if no location
@@ -127,9 +132,9 @@ export default function Home() {
         followZoomLevel={14}
         followUserLocation={true} 
         />
-        <MapboxGL.UserLocation visible={true} />
-        <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
-      </MapboxGL.MapView>
-    </Container>
+          <MapboxGL.UserLocation visible={true} />
+          <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
+        </MapboxGL.MapView>
+      </Container>
   );
 }

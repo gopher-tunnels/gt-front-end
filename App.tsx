@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { useCallback } from 'react';
 import * as SplashScreen from 'expo-splash-screen';
 import fontObject from './assets/fonts';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontObject);
@@ -24,11 +25,13 @@ export default function App() {
 
   return (
     // TODO: set up theme switching
-    <ThemeProvider theme={lightTheme}>
-      <View style={styles.container} onLayout={onLayoutRootView}>
-        <Home />
-      </View>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider theme={lightTheme}>
+        <View style={styles.container} onLayout={onLayoutRootView}>
+          <Home />
+        </View>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
 
