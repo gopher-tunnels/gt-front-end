@@ -1,5 +1,5 @@
-import React, { ComponentProps, useEffect, useState } from "react";
-import { Keyboard, ScrollView, TextInput } from "react-native";
+import React, { ComponentProps, useState } from "react";
+import { ScrollView, TextInput } from "react-native";
 import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
@@ -20,9 +20,12 @@ interface SearchbarProps {
 const Searchbar: React.FC<SearchbarProps> = () => {
   const theme = useTheme();
   const [inputText, updateInputText] = React.useState("");
-  const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>(
-    [],
-  ); // switch to TEMP_BUILDINGS to test
+  const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>([
+    { id: "Akerman Hall", name: "Akerman Hall" },
+    { id: "Tate Hall", name: "Tate Hall" },
+    { id: "Rapson Hall", name: "Rapson Hall" },
+    { id: "Coffman Memorial Union", name: "Coffman Memorial Union" },
+  ]); // switch to TEMP_BUILDINGS to test
   const [popularDestinations, setPopularDestinations] = useState<Destination[]>(
     // TODO: set to value from backend
     [
@@ -32,14 +35,7 @@ const Searchbar: React.FC<SearchbarProps> = () => {
       { id: "Coffman Memorial Union", name: "Coffman Memorial Union" },
     ],
   );
-  const inputRef = React.useRef<TextInput>(null);
-
-  useEffect(() => {
-    const subscription = Keyboard.addListener("keyboardDidHide", () => {
-      Keyboard.dismiss();
-    });
-    return () => subscription.remove();
-  });
+  const inputRef = React.useRef<TextInput | null>(null);
 
   const showResults =
     inputRef.current?.isFocused() && buildingResults.length > 0;
@@ -84,20 +80,22 @@ const Searchbar: React.FC<SearchbarProps> = () => {
           ))}
         </ScrollView>
       </SearchResultContainer>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ paddingTop: 6 }}
-        contentContainerStyle={{ gap: 6 }}
-      >
-        {popularDestinations.map((destination) => (
-          <CustomChip
-            key={destination.id}
-            label={destination.name}
-            type="default"
-          />
-        ))}
-      </ScrollView>
+      {!showResults && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={{ paddingTop: 6, overflow: "visible" }}
+          contentContainerStyle={{ gap: 6 }}
+        >
+          {popularDestinations.map((destination) => (
+            <CustomChip
+              key={destination.id}
+              label={destination.name}
+              type="default"
+            />
+          ))}
+        </ScrollView>
+      )}
     </AnimatedContainer>
   );
 };
