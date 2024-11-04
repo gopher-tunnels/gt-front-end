@@ -16,7 +16,7 @@ export const Map = styled(MapView)`
   position: relative;
 `;
 
-export const Content = styled.SafeAreaView`
+export const Content = styled.View`
   z-index: 1;
   flex: 1;
   width: 100%;

@@ -10,9 +10,12 @@ import fontObject from "../../assets/fonts";
 
 import { Container, Content } from "./styles";
 import SearchBar from "../../components/Searchbar";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { TODO } from "../../@types/utils";
+import DirectionsHeader from "../../components/DirectionsHeader";
 import DirectionsModal from "../../components/DirectionsModal";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useSafeAreaInsets, SafeAreaProvider } from "react-native-safe-area-context";
+import { buildings } from "../../utils/mock";
+import { getBoundingBox } from "../../utils/functions";
 export interface types {
   newText: string;
 }
@@ -20,121 +23,142 @@ export interface types {
 SplashScreen.preventAutoHideAsync();
 MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
-export default function Home() {
-  const [fontsLoaded, fontsError] = useFonts(fontObject);
-  // State to get the current user location
+const Home = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
+  const [fontsLoaded, fontsError] = useFonts(fontObject);
+  const cameraRef = useRef<MapboxGL.Camera | null>(null);
+  const [onRoute, setOnRoute] = useState<boolean>(false);
+  const [destination, setDestination] = useState<TODO>(null);
 
-  const [coordinates] = useState([40, -90]);
-
-  // State to get the current location of the current user view
-  const [region, setRegion] = useState({
-    latitude: 44.97565862446892,
-    longitude: -93.23372512269837,
-    latitudeDelta: 0.02,
-    longitudeDelta: 0.02,
-  });
-  const [heading, setHeading] = useState<number | null>(null); // Sttate to get the current heading position
-  const [errorMsg, setErrorMsg] = useState<string | null>(null); // State to track errors
-  const [markerSize, setMarkerSize] = useState(56);
-  const [isPermissionGranted, setIsPermissionGranted] = useState(false);
-  const mapRef = useRef<any>();
-  // const size = zoomLevel <= 10 ? 20 : 30;
-
-  const focusMap = () => {
-    if (location) {
-      const { latitude, longitude } = location.coords;
-      mapRef.current.animateToRegion({
-        latitude,
-        longitude,
-        latitudeDelta: 0.02,
-        longitudeDelta: 0.02,
-      });
-    }
-  };
-  // TODO: @limetheman merge these calls to `useEffect` (they both have the same dependency array)
-  useEffect(() => {
-    const getLocation = async () => {
-      try {
-        const { status: permissionStatus } =
-          await Location.requestForegroundPermissionsAsync();
-        if (permissionStatus !== "granted") {
-          console.log("Location permission not granted");
-          return;
-        }
-
-        const currentLocation = await Location.getCurrentPositionAsync();
-        setLocation(currentLocation);
-      } catch (error) {
-        console.error("Error getting location:", error);
-      }
-    };
-
-    // Call getLocation initially
-    getLocation();
-
-    setInterval(getLocation, 1000);
-  }, []);
-
-  useEffect(() => {
-    const getHeading = async () => {
-      try {
-        Location.watchHeadingAsync((newHeading) => {
-          setHeading(newHeading.trueHeading);
-        });
-      } catch (error) {
-        console.error("Error getting heading:", error);
-      }
-    };
-
-    // Call getHeading initially
-    getHeading();
-  }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsError) console.warn(fontsError);
-    if ((fontsLoaded || fontsError) && location) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontsError, location]);
-
-  if (!(fontsLoaded || fontsError) || !location) {
+  if (!(fontsLoaded || fontsError)) {
     return null;
   }
 
+  const adjustMapToRoute = useCallback(
+    (building: (typeof buildings)[number]) => {
+      setDestination(building);
+      if (!location) cameraRef.current?.moveTo(building.coordinates, 500);
+      else {
+        const boundingBox = getBoundingBox([
+          [location.coords.longitude, location.coords.latitude],
+          building.coordinates,
+        ]);
+        console.log(boundingBox);
+        cameraRef.current?.fitBounds(
+          boundingBox.ne,
+          boundingBox.sw,
+          // TODO: set to dynamic value from size of overlays
+          [300, 50],
+          500,
+        );
+      }
+    },
+    [location, cameraRef.current],
+  );
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("Permission to access location was denied");
+        return;
+      }
+      await setLocation(await Location.getCurrentPositionAsync({}));
+    })();
+  }, []);
 
   const insets = useSafeAreaInsets();
   return (
-      <Container>
-        <Content pointerEvents="box-none" style={{ paddingTop: insets.top }}>
-          <SearchBar />
-        </Content>
-        
+    <Container>
+      <Content
+        pointerEvents="box-none"
+        style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+      >
+        {onRoute ? (
+          <DirectionsHeader
+            directions={["enter", "left", "forward", "right"]}
+            current={0}
+            progress={0.1}
+          />
+        ) : (
+          <SearchBar
+            onFocus={() => setDestination(null)}
+            onSelectDestination={(destination) => {
+              adjustMapToRoute(destination);
+            }}
+          />
+        )}
+        {destination && (
+          <>
+            <DirectionsModal
+              destinationInfo={{
+                id: destination.id,
+                name: destination.name,
+                // TODO: use actual data from back-end response
+                opens: Array.from(
+                  { length: 7 },
+                  () => new Date(2024, 8, 23, 9, 0, 0),
+                ),
+                closes: Array.from(
+                  { length: 7 },
+                  () => new Date(2024, 8, 23, 19, 0, 0),
+                ),
+              }}
+              distance={{ miles: 0.1, meters: 0.2 }}
+              eta={{ minutes: 6 }}
+              //TODO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              onStartRoute={() => setOnRoute(true)}
+              onEndRoute={() => setOnRoute(false)}
+            />
+          </>
+        )}
+      </Content>
+
       <MapboxGL.MapView
-          style={{
-            flex: 1,
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: -1,
-          }}
-          styleURL="mapbox://styles/mapbox/outdoors-v12"
-        >
-          <MapboxGL.Camera
+        scaleBarEnabled={false}
+        onPress={(x) => console.log(x)}
+        style={{
+          flex: 1,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+        }}
+        styleURL="mapbox://styles/mapbox/outdoors-v12"
+      >
+        <MapboxGL.Camera
+          animationMode={"moveTo"}
+          ref={cameraRef}
           defaultSettings={{
             zoomLevel: 15,
-            centerCoordinate: [-93.234727, 44.974494], // centerns on campus if no location
+            centerCoordinate: [-93.23532984426897, 44.974795560478185], // centers on campus if no location
           }}
-        followZoomLevel={14}
-        followUserLocation={true} 
+          followZoomLevel={14}
+          // followUserLocation={true}
         />
-          <MapboxGL.UserLocation visible={true} />
-          <CustomMarker coordinate={[-93.234727, 44.974494]} popupText="hello" />
-        </MapboxGL.MapView>
-      </Container>
+        <MapboxGL.UserLocation visible={true} />
+        {buildings
+          .filter((building) => !onRoute || building.id === destination.id)
+          .map((building) => (
+            <CustomMarker
+              coordinate={building.coordinates}
+              id={building.id}
+              key={building.id}
+              onSelected={() => {
+                if (!onRoute) adjustMapToRoute(building);
+              }}
+              onDeselected={() => {
+                if (!onRoute) setDestination(null);
+              }}
+            />
+          ))}
+      </MapboxGL.MapView>
+    </Container>
   );
-}
+};
+
+export default Home;

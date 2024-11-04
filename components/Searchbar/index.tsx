@@ -5,35 +5,32 @@ import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import CustomChip from "../CustomChip";
-import { Destination } from "../../@types/api";
 import Animated, { Easing, SlideInUp } from "react-native-reanimated";
+import { buildings } from "../../utils/mock";
 
 type BuildingInfo = ComponentProps<typeof SearchResult>["building"];
 
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
-interface SearchbarProps {
+interface SearchbarProps extends ComponentProps<typeof SearchInput> {
   // TODO: make required and modify logic to work with backend
-  onSelectDestination?: (dest: string) => void;
+  onSelectDestination?: (dest: BuildingInfo) => void;
 }
 
-const Searchbar: React.FC<SearchbarProps> = () => {
+const Searchbar: React.FC<SearchbarProps> = ({
+  onSelectDestination,
+  ...props
+}) => {
   const theme = useTheme();
-  const [inputText, updateInputText] = React.useState("");
-  const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>([
-    { id: "Akerman Hall", name: "Akerman Hall" },
-    { id: "Tate Hall", name: "Tate Hall" },
-    { id: "Rapson Hall", name: "Rapson Hall" },
-    { id: "Coffman Memorial Union", name: "Coffman Memorial Union" },
-  ]); // switch to TEMP_BUILDINGS to test
-  const [popularDestinations, setPopularDestinations] = useState<Destination[]>(
+  const [inputText, setInputText] = React.useState("");
+  const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>(
+    [],
+  );
+  const [popularDestinations, setPopularDestinations] = useState<
+    BuildingInfo[]
+  >(
     // TODO: set to value from backend
-    [
-      { id: "Akerman Hall", name: "Akerman Hall" },
-      { id: "Tate Hall", name: "Tate Hall" },
-      { id: "Rapson Hall", name: "Rapson Hall" },
-      { id: "Coffman Memorial Union", name: "Coffman Memorial Union" },
-    ],
+    buildings,
   );
   const inputRef = React.useRef<TextInput | null>(null);
 
@@ -69,7 +66,18 @@ const Searchbar: React.FC<SearchbarProps> = () => {
           cursorColor={theme.colors.primaryMain}
           placeholderTextColor={theme.colors.primary4}
           value={inputText}
-          onChangeText={updateInputText}
+          onChangeText={(newVal) => {
+            setInputText(newVal);
+            // TODO: modify search logic
+            setBuildingResults(
+              newVal
+                ? buildings.filter((building) =>
+                    building.name.toLowerCase().includes(newVal.toLowerCase()),
+                  )
+                : [],
+            );
+          }}
+          {...props}
           ref={inputRef}
         />
       </Bar>
@@ -87,8 +95,11 @@ const Searchbar: React.FC<SearchbarProps> = () => {
           style={{ paddingTop: 6, overflow: "visible" }}
           contentContainerStyle={{ gap: 6 }}
         >
-          {popularDestinations.map((destination) => (
+          {popularDestinations.slice(0, 5).map((destination) => (
             <CustomChip
+              onPress={() => {
+                if (onSelectDestination) onSelectDestination(destination);
+              }}
               key={destination.id}
               label={destination.name}
               type="default"

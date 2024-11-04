@@ -47,6 +47,8 @@ interface DirectionsModalProps {
   destinationInfo: { id: string; name: string; opens: Date[]; closes: Date[] };
   eta: DurationUnitsObjectType;
   distance: { miles: number; meters: number };
+  onStartRoute?: () => void;
+  onEndRoute?: () => void;
 }
 
 const Clock = (
@@ -91,6 +93,8 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   destinationInfo,
   eta,
   distance,
+  onStartRoute,
+  onEndRoute,
 }) => {
   // setup hooks
   const theme = useTheme();
@@ -292,7 +296,13 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
           </AnimatedInfoContainer>
           <CustomButton
             outerContainerStyle={{ flex: 1, justifyContent: "flex-end" }}
-            onPress={() => setNavigationActive((prev) => !prev)}
+            onPress={() =>
+              setNavigationActive((prev) => {
+                if (prev && onEndRoute) onEndRoute();
+                if (!prev && onStartRoute) onStartRoute();
+                return !prev;
+              })
+            }
             label={navigationActive ? "End" : "Go"}
             CustomIcon={navigationActive ? undefined : Go}
             variant={navigationActive ? "outlined" : "filled"}

@@ -1,14 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Home from './app/Home';
-import { ThemeProvider } from 'styled-components';
-import lightTheme from './styles/themes/light';
-import Splash from './app/Splash';
-import { useFonts } from 'expo-font';
-import { useCallback } from 'react';
-import * as SplashScreen from 'expo-splash-screen';
-import fontObject from './assets/fonts';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import Home from "./app/Home";
+import { ThemeProvider } from "styled-components";
+import lightTheme from "./styles/themes/light";
+import Splash from "./app/Splash";
+import { useFonts } from "expo-font";
+import React, { useCallback } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import fontObject from "./assets/fonts";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontObject);
@@ -26,11 +27,13 @@ export default function App() {
   return (
     // TODO: set up theme switching
     <SafeAreaProvider>
-      <ThemeProvider theme={lightTheme}>
-        <View style={styles.container} onLayout={onLayoutRootView}>
-          <Home />
-        </View>
-      </ThemeProvider>
+      <GestureHandlerRootView>
+        <ThemeProvider theme={lightTheme}>
+          <View style={styles.container} onLayout={onLayoutRootView}>
+            <Home />
+          </View>
+        </ThemeProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   );
 }
@@ -38,8 +41,8 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
