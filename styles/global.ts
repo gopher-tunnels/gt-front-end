@@ -12,12 +12,12 @@ const weightMap = {
 } as const;
 
 const variantMap = {
-  label: { weight: 500, size: "12rem" },
-  miniHeader: { weight: 700, size: "14rem" },
-  normal: { weight: 500, size: "16rem" },
-  header: { weight: 700, size: "20rem" },
-  large: { weight: 500, size: "24rem" },
-  title: { weight: 800, size: "40rem" },
+  label: { weight: 500, size: 12 },
+  miniHeader: { weight: 700, size: 14 },
+  normal: { weight: 500, size: 16 },
+  header: { weight: 700, size: 20 },
+  large: { weight: 500, size: 24 },
+  title: { weight: 800, size: 40 },
 } as const;
 
 interface StyledTextProps {
@@ -28,7 +28,7 @@ interface StyledTextProps {
 
 export const StyledText = styled.Text<StyledTextProps>`
   font-family: PlusJakartaSans-${({ variant, weight, italic }) => `${(weightMap as Record<any, string>)[weight ?? variantMap[variant as keyof typeof variantMap]?.weight ?? 500] ?? weight}${italic ? "Italic" : ""}`};
-  font-size: ${({ variant }) => variantMap[variant ?? "normal"].size};
+  font-size: ${({ variant }) => variantMap[variant ?? "normal"].size}px;
   color: ${({ theme }) => theme.colors.contrast};
 `;
 // * StyledText <<<<<<

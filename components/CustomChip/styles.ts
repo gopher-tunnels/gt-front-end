@@ -42,7 +42,7 @@ export const ChipText = styled.Text<CommonProps>`
 export const Circle = styled.View<CommonProps>`
   width: 15px;
   aspect-ratio: 1;
-  border-radius: 50%;
+  border-radius: 15px;
   margin-right: 4px;
   ${(props) =>
     props.type === "tunnel" &&

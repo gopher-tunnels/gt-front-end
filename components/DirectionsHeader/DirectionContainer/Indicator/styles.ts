@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled from "styled-components/native";
 
 interface ContainerProps {
   size: number;
@@ -13,5 +13,5 @@ export const Container = styled.View<ContainerProps>`
   aspect-ratio: 1;
   height: ${({ size }) => size}px;
   width: ${({ size }) => size}px;
-  border-radius: 50%;
+  border-radius: ${({ size }) => size}px;
 `;
