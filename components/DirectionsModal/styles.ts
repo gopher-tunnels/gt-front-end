@@ -40,6 +40,6 @@ export const HeadingContainer = styled.View`
 
 export const IconTextContainer = styled.View`
   flex-direction: row;
-  gap: 3rem;
+  gap: 3px;
   align-items: center;
 `;
