@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Content } from "./styles";
 import { StyleProp, ViewStyle } from "react-native";
 import DirectionContainer from "./DirectionContainer";
-import Animated, { Easing, SlideInUp } from "react-native-reanimated";
+import Animated, { Easing, SlideInUp, SlideOutUp } from "react-native-reanimated";
 
 const directionLabels = {
   // TODO: merge with `Indicator` props
@@ -32,7 +32,7 @@ const DirectionsHeader: React.FC<DirectionsHeaderProps> = ({
       {...props}
       pointerEvents="box-none"
       entering={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
-      exiting={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutUp.duration(500).easing(Easing.in(Easing.exp))}
     >
       <Content pointerEvents="box-none">
         {directions.map(

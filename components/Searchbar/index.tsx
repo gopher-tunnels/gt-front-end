@@ -5,7 +5,7 @@ import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import CustomChip from "../CustomChip";
-import Animated, { Easing, SlideInUp } from "react-native-reanimated";
+import Animated, { Easing, SlideInUp, SlideOutUp } from "react-native-reanimated";
 import { buildings } from "../../utils/mock";
 
 type BuildingInfo = ComponentProps<typeof SearchResult>["building"];
@@ -40,7 +40,7 @@ const Searchbar: React.FC<SearchbarProps> = ({
   return (
     <AnimatedContainer
       entering={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
-      exiting={SlideInUp.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutUp.duration(500).easing(Easing.in(Easing.exp))}
     >
       <Bar
         style={{
