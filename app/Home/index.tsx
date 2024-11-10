@@ -74,7 +74,7 @@ const Home = () => {
     <Container>
       <Content
         pointerEvents="box-none"
-        style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
+        style={{ paddingTop: insets.top + 5, paddingBottom: insets.bottom }}
       >
         {onRoute ? (
           <DirectionsHeader
