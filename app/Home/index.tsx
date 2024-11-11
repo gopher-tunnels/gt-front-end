@@ -32,9 +32,6 @@ const Home = () => {
   const [onRoute, setOnRoute] = useState<boolean>(false);
   const [destination, setDestination] = useState<TODO>(null);
 
-  if (!(fontsLoaded || fontsError)) {
-    return null;
-  }
 
   const adjustMapToRoute = useCallback(
     (building: (typeof buildings)[number]) => {
@@ -70,6 +67,9 @@ const Home = () => {
   }, []);
 
   const insets = useSafeAreaInsets();
+  if (!(fontsLoaded || fontsError)) {
+    return null;
+  }
   return (
     <Container>
       <Content
