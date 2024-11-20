@@ -13,6 +13,40 @@ interface CustomButtonProps extends React.ComponentProps<typeof Container> {
   outerContainerStyle: ComponentProps<typeof MaskedView>["style"];
 }
 
+// TODO: check if missing params, ask if I need to implement anything other than the interface
+
+/**
+ * @description Customizable button
+ *
+ * @param {string} label - The label that will appear on the button
+ * @param {string} loadingLabel - The label of the button as it loads
+ * @param {React.ReactNode} CustomIcon - A custom icon that appears on the button, to the right of the label, if any
+ * @param {number} loadingProgress - loading progress
+ * @param {ComponentProps<typeof MaskedView>["style"]} outerContainerStyle - The style of the button container
+ * @param {boolean | null | undefined} disabled - Whether the press behavior is disabled.
+ * @param {StyleProp<ViewStyle>} style - Either view styles or a function that receives a boolean reflecting whether the component is currently pressed and returns view styles.
+ * @param {"filled" | "outlined" | undefined} variant - flips color scheme of button to look "filled" or "outlined" otherwise undefined
+ * 
+ * @returns {React.FC<CustomButtonProps>} TSX React Functional Component
+ * 
+ * @example
+ * ```tsx
+ * <CustomButton
+ *   outerContainerStyle={{ flex: 1, justifyContent: "flex-end" }}
+ *   onPress={() =>
+*      setNavigationActive((prev) => {
+*        if (prev && onEndRoute) onEndRoute();
+*        if (!prev && onStartRoute) onStartRoute();
+ *       return !prev;
+ *     })
+ *   }
+ *   label={navigationActive ? "End" : "Go"}
+ *   CustomIcon={navigationActive ? undefined : Go}
+ *   variant={navigationActive ? "outlined" : "filled"}
+ * />
+ * ```
+ */
+
 const CustomButton: React.FC<CustomButtonProps> = ({
   label,
   disabled,

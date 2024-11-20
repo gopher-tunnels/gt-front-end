@@ -24,6 +24,18 @@ export interface Props {
     onChangeText(text: string) : void;
 }
 
+/**
+ * @description 
+ *
+ * @param {string} label - 
+ * 
+ * @returns {React.FC<Props>} TSX React Functional Component
+ *
+ * @example
+ * ```tsx
+ * non existant
+ * ```
+ */
 
 const CustomInput : React.FC<Props> = (props : Props) => {
     const {

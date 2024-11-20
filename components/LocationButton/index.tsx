@@ -7,6 +7,10 @@ export interface Props {
     height: number;
 }
 
+/**
+ * Unused, doesn't even look like a button
+ */
+
 const LocationButton: React.FC<Props> = (props: Props) => {
     const { 
       width = 56,

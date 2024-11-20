@@ -11,6 +11,20 @@ export interface Props
   popupText?: string;
 }
 
+/**
+ * @description A touchable container with styles for different paths
+ *
+ * @param {string} label - The label that appears on the chip
+ * @param {"default" | "tunnel" | "skyway" | "sidewalk"} type - Types that have different styles / colors for the chip from "default", "tunnel", "skyway" or "sidewalk"
+ * 
+ * @returns {React.FC<CustomChipProps>} TSX React Functional Component
+ *
+ * @example
+ * ```tsx
+ * <CustomChip label="Tunnel" type="tunnel"/>
+ * ```
+ */
+
 const CustomMarker: React.FC<Props> = (props: Props) => {
   const { width = 50, height = 50, coordinate, ...otherProps } = props;
 

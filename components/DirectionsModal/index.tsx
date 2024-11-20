@@ -35,6 +35,7 @@ import {
 import Animated, {
   Easing,
   SlideInDown,
+  SlideOutDown,
   useSharedValue,
   withSpring,
   withTiming,
@@ -67,7 +68,9 @@ const AnimatedContainer = Animated.createAnimatedComponent(Container);
  * @param {DirectionsModalProps['destinationInfo']} destinationInfo - Information about the destination. Must include an id and name, and an array of opening and closing times for each day of the week.
  * @param {DurationUnitsObjectType} eta - Object describing the Estimated Time to Arrival.
  * @param {{miles: number; meters: number;}} distance - Object describing the distance to the destination in miles and meters.
- *
+ * @param onStartRoute - function to run on route start
+ * @param onEndRoute - function to run on route end
+ * 
  * @returns {React.FC<DirectionsModalProps>} TSX React Functional Component
  *
  * @example
@@ -86,9 +89,14 @@ const AnimatedContainer = Animated.createAnimatedComponent(Container);
  *     ),
  *   }}
  *   distance={{ miles: 0.1, meters: 0.2 }}
- *   eta={{ minutes: 6 }} />
+ *   eta={{ minutes: 6 }} 
+ *   onStartRoute={() => setOnRoute(true)}
+ *   onEndRoute={() => setOnRoute(false)}
+ * />
+ *
  * ```
  */
+
 const DirectionsModal: React.FC<DirectionsModalProps> = ({
   destinationInfo,
   eta,
@@ -192,6 +200,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   return (
     <AnimatedContainer
       entering={SlideInDown.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutDown.duration(400).easing(Easing.in(Easing.exp))} // test
     >
       <Animated.View
         style={{ transform: [{ translateY: bottomSheetTranslation }] }}

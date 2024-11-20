@@ -17,6 +17,25 @@ interface SearchbarProps extends ComponentProps<typeof SearchInput> {
   onSelectDestination?: (dest: BuildingInfo) => void;
 }
 
+/**
+ * @description A styled search bar with text input
+ *
+ * @param {DefaultTheme} theme -  
+ * @param {number} current - 
+ * 
+ * @returns {React.FC<CustomChipProps>} TSX React Functional Component
+ *
+ * @example
+ * ```tsx
+ * <SearchBar
+ *   onFocus={() => setDestination(null)}
+ *   onSelectDestination={(destination) => {
+ *     adjustMapToRoute(destination);
+ *   }}
+ * />
+ * ```
+ */
+
 const Searchbar: React.FC<SearchbarProps> = ({
   onSelectDestination,
   ...props

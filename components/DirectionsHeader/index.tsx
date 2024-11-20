@@ -21,6 +21,25 @@ export interface DirectionsHeaderProps {
 
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
+/**
+ * @description A Big label that shows current direction with symbols and styles and a small tab that shows the next direction with a progress bar
+ *
+ * @param {(keyof typeof directionLabels)[]} directions - the directions that will show up on the header with according symbols, the current direction shows on the main header and the next direction shows on the smaller tab. Must be: "enter", "right", "left" or "forward"
+ * @param {number} current - the current number is the current step from the directions to show up on the header starting at 0
+ * @param {number} progress - affects the loading bar in the smaller directions tab. 0 is empty, 1.05 is full (weird number?)
+ * 
+ * @returns {React.FC<CustomChipProps>} TSX React Functional Component
+ *
+ * @example
+ * ```tsx
+ * <DirectionsHeader
+ *   directions={["enter", "left", "forward", "right"]}
+ *   current={0}
+ *   progress={0.1}
+ *  />
+ * ```
+ */
+
 const DirectionsHeader: React.FC<DirectionsHeaderProps> = ({
   directions,
   current,
