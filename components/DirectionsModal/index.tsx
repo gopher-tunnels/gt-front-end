@@ -35,6 +35,7 @@ import {
 import Animated, {
   Easing,
   SlideInDown,
+  SlideOutDown,
   useSharedValue,
   withSpring,
   withTiming,
@@ -192,6 +193,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   return (
     <AnimatedContainer
       entering={SlideInDown.duration(500).easing(Easing.out(Easing.exp))}
+      exiting={SlideOutDown.duration(500).easing(Easing.in(Easing.exp))}
     >
       <Animated.View
         style={{ transform: [{ translateY: bottomSheetTranslation }] }}
