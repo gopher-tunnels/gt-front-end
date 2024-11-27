@@ -7,13 +7,11 @@ interface CustomChipProps extends TouchableOpacityProps {
   type?: "default" | "tunnel" | "skyway" | "sidewalk";
 }
 
-// TODO: make better? Why do the param types not show up when hover over component
-
 /**
  * @description A touchable container with styles for different paths
  *
  * @param {string} label - The label that appears on the chip
- * @param {"default" | "tunnel" | "skyway" | "sidewalk"} type - Types that have different styles / colors for the chip
+ * @param {"default" | "tunnel" | "skyway" | "sidewalk"} type - Types that have different styles / colors for the chip, must be "default", "tunnel", "skyway", "sidewalk" or undefined
  * 
  * @returns {React.FC<CustomChipProps>} TSX React Functional Component
  *

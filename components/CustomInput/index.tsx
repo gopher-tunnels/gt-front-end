@@ -25,16 +25,7 @@ export interface Props {
 }
 
 /**
- * @description 
- *
- * @param {string} label - 
- * 
- * @returns {React.FC<Props>} TSX React Functional Component
- *
- * @example
- * ```tsx
- * non existant
- * ```
+ * Unused
  */
 
 const CustomInput : React.FC<Props> = (props : Props) => {

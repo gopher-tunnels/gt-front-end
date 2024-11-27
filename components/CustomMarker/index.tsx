@@ -12,16 +12,28 @@ export interface Props
 }
 
 /**
- * @description A touchable container with styles for different paths
+ * @description A custom marker
  *
- * @param {string} label - The label that appears on the chip
- * @param {"default" | "tunnel" | "skyway" | "sidewalk"} type - Types that have different styles / colors for the chip from "default", "tunnel", "skyway" or "sidewalk"
+ * @param {number} width - The width of the marker, defaults to 50 and should be equal to height otherwise will cause problems
+ * @param {number} height - The height of the marker, defaults to 50 and should be equal to width otherwise will cause problems
+ * @param {[number, number]} coordinate - The coordinates where the marker will show up on the map, takes array of two numbers
+ * @param {string} popupText - popup text (Can't figure out what this does)
  * 
  * @returns {React.FC<CustomChipProps>} TSX React Functional Component
  *
  * @example
  * ```tsx
- * <CustomChip label="Tunnel" type="tunnel"/>
+ * <CustomMarker
+ *   coordinate={building.coordinates}
+ *   id={building.id}
+ *   key={building.id}
+ *   onSelected={() => {
+ *     if (!onRoute) adjustMapToRoute(building);
+ *   }}
+ *   onDeselected={() => {
+ *     if (!onRoute) setDestination(null);
+ *   }}
+ * />
  * ```
  */
 

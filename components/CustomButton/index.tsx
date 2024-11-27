@@ -13,10 +13,8 @@ interface CustomButtonProps extends React.ComponentProps<typeof Container> {
   outerContainerStyle: ComponentProps<typeof MaskedView>["style"];
 }
 
-// TODO: check if missing params, ask if I need to implement anything other than the interface
-
 /**
- * @description Customizable button
+ * @description Customizable button that has optional icon, loading progress, and styles
  *
  * @param {string} label - The label that will appear on the button
  * @param {string} loadingLabel - The label of the button as it loads
@@ -26,6 +24,7 @@ interface CustomButtonProps extends React.ComponentProps<typeof Container> {
  * @param {boolean | null | undefined} disabled - Whether the press behavior is disabled.
  * @param {StyleProp<ViewStyle>} style - Either view styles or a function that receives a boolean reflecting whether the component is currently pressed and returns view styles.
  * @param {"filled" | "outlined" | undefined} variant - flips color scheme of button to look "filled" or "outlined" otherwise undefined
+ * @param {boolean | undefined} loading - boolean value, if button loading or not
  * 
  * @returns {React.FC<CustomButtonProps>} TSX React Functional Component
  * 
