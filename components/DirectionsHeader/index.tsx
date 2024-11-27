@@ -2,7 +2,11 @@ import React from "react";
 import { Container, Content } from "./styles";
 import { StyleProp, ViewStyle } from "react-native";
 import DirectionContainer from "./DirectionContainer";
-import Animated, { Easing, SlideInUp, SlideOutUp } from "react-native-reanimated";
+import Animated, {
+  Easing,
+  SlideInUp,
+  SlideOutUp,
+} from "react-native-reanimated";
 
 const directionLabels = {
   // TODO: merge with `Indicator` props
