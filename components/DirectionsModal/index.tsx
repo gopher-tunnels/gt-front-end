@@ -200,7 +200,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   return (
     <AnimatedContainer
       entering={SlideInDown.duration(500).easing(Easing.out(Easing.exp))}
-      exiting={SlideOutDown.duration(400).easing(Easing.in(Easing.exp))} // test
+      exiting={SlideOutDown.duration(500).easing(Easing.in(Easing.exp))}
     >
       <Animated.View
         style={{ transform: [{ translateY: bottomSheetTranslation }] }}
