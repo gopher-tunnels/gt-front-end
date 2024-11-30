@@ -16,6 +16,7 @@ import DirectionsHeader from "../../components/DirectionsHeader";
 import DirectionsModal from "../../components/DirectionsModal";
 import { buildings } from "../../utils/mock";
 import { getBoundingBox } from "../../utils/functions";
+import PathComponent from "../../components/PathComponent";
 export interface types {
   newText: string;
 }
@@ -32,6 +33,8 @@ const Home = () => {
   const [onRoute, setOnRoute] = useState<boolean>(false);
   const [destination, setDestination] = useState<TODO>(null);
 
+  
+  const coords = [[-93.23469758746563, 44.975307529465425], [-93.23498968813362, 44.975278609213774],[-93.23497381225647, 44.97490540795735],[-93.23498192289121, 44.97447679424036],[-93.23568907847263, 44.97446947877589],[-93.23571969749581, 44.97392768568079],[-93.23589760357368, 44.97393239292896],]
 
   const adjustMapToRoute = useCallback(
     (building: (typeof buildings)[number]) => {
@@ -156,6 +159,9 @@ const Home = () => {
               }}
             />
           ))}
+
+        <PathComponent coordinates={coords} />
+          
       </MapboxGL.MapView>
     </Container>
   );
