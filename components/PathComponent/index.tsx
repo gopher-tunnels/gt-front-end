@@ -1,5 +1,6 @@
 import React from  "react";
 import MapboxGL from "@rnmapbox/maps";
+import { useTheme } from "styled-components/native";
 
 interface PathComponentProps {
     coordinates: number[][];
@@ -7,11 +8,14 @@ interface PathComponentProps {
     lineWidth?: number;
   }
 
+
   const PathComponent: React.FC<PathComponentProps> = ({
     coordinates,
-    lineColor = "#0ca8ff",
+    lineColor,
     lineWidth = 6,
   }) => {
+    const theme = useTheme();
+    const color = lineColor || theme.colors.tunnel2;
     return (
       <MapboxGL.ShapeSource
         id="shapeSource"
@@ -30,7 +34,7 @@ interface PathComponentProps {
           style={{
             lineCap: "round",
             lineJoin: "round",
-            lineColor: lineColor,
+            lineColor: color,
             lineWidth: lineWidth,
           }}
         />
