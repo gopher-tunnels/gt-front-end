@@ -2,6 +2,10 @@ import React from  "react";
 import MapboxGL from "@rnmapbox/maps";
 import { useTheme } from "styled-components/native";
 
+// Example usage, place in <MapboxGL.MapView>:
+// <PathComponent coordinates={coords}/>
+
+
 interface PathComponentProps {
     coordinates: number[][];
     lineColor?: string;
@@ -15,7 +19,7 @@ interface PathComponentProps {
     lineWidth = 6,
   }) => {
     const theme = useTheme();
-    const color = lineColor || theme.colors.tunnel2;
+    const color = lineColor || theme.colors.tunnel2;  // use input color or default tunnel color
     return (
       <MapboxGL.ShapeSource
         id="shapeSource"
