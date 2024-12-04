@@ -190,7 +190,7 @@ const Home = () => {
                 if (!onRoute) setDestination(null);
               }}
             />
-          ))}
+          ))}         
       </MapboxGL.MapView>
     </Container>
   );
