@@ -28,13 +28,30 @@ const Home = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
+  const [heading, setHeading] = useState<number>(0);
   const [fontsLoaded, fontsError] = useFonts(fontObject);
   const cameraRef = useRef<MapboxGL.Camera | null>(null);
   const [onRoute, setOnRoute] = useState<boolean>(false);
   const [destination, setDestination] = useState<TODO>(null);
-
-  // example coords for path component
   const coords = [[-93.23469758746563, 44.975307529465425], [-93.23498968813362, 44.975278609213774],[-93.23497381225647, 44.97490540795735],[-93.23498192289121, 44.97447679424036],[-93.23568907847263, 44.97446947877589],[-93.23571969749581, 44.97392768568079],[-93.23589760357368, 44.97393239292896],]
+  // useEffect(() => {
+  //   // console.log("heading: ", heading);
+  //   if (heading)
+  //     cameraRef.current?.setCamera({
+  //       heading: heading,
+  //       animationDuration: 0,
+  //       animationMode: "easeTo",
+  //     });
+  // }, [heading, destination]);
+
+  useEffect(() => {
+    if (!destination)
+      cameraRef.current?.setCamera({
+        heading: 0,
+        animationDuration: 500,
+        animationMode: "easeTo",
+      });
+  }, [destination]);
 
   const adjustMapToRoute = useCallback(
     (building: (typeof buildings)[number]) => {
@@ -45,7 +62,7 @@ const Home = () => {
           [location.coords.longitude, location.coords.latitude],
           building.coordinates,
         ]);
-        console.log(boundingBox);
+        // console.log(boundingBox);
         cameraRef.current?.fitBounds(
           boundingBox.ne,
           boundingBox.sw,
@@ -65,7 +82,21 @@ const Home = () => {
         console.warn("Permission to access location was denied");
         return;
       }
-      await setLocation(await Location.getCurrentPositionAsync({}));
+      Location.watchPositionAsync(
+        {
+          accuracy: Location.LocationAccuracy.BestForNavigation,
+          distanceInterval: 1,
+          timeInterval: 500,
+        },
+        (loc) => {
+          // console.log("location updated: ", loc);
+          setLocation(loc);
+        },
+      );
+      Location.watchHeadingAsync((heading) => {
+        // console.log(heading);
+        setHeading(heading.trueHeading);
+      });
     })();
   }, []);
 
@@ -137,6 +168,7 @@ const Home = () => {
           animationMode={"moveTo"}
           ref={cameraRef}
           defaultSettings={{
+            heading: 0,
             zoomLevel: 15,
             centerCoordinate: [-93.23532984426897, 44.974795560478185], // centers on campus if no location
           }}
@@ -159,9 +191,6 @@ const Home = () => {
               }}
             />
           ))}
-
-        
-          
       </MapboxGL.MapView>
     </Container>
   );
