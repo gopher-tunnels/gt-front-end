@@ -24,6 +24,9 @@ export interface Props {
     onChangeText(text: string) : void;
 }
 
+/**
+ * Unused
+ */
 
 const CustomInput : React.FC<Props> = (props : Props) => {
     const {

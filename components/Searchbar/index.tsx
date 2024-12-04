@@ -17,6 +17,24 @@ interface SearchbarProps extends ComponentProps<typeof SearchInput> {
   onSelectDestination?: (dest: BuildingInfo) => void;
 }
 
+/**
+ * @description A styled search bar with text input
+ *
+ * @param {((dest: BuildingInfo) => void) | undefined} onSelectDestination - function to run when user selects a destination from the search bar. Function takes parameter of type BuildingInfo and doesn't return anything
+ * 
+ * @returns {React.FC<CustomChipProps>} TSX React Functional Component
+ *
+ * @example
+ * ```tsx
+ * <SearchBar
+ *   onFocus={() => setDestination(null)}
+ *   onSelectDestination={(destination) => {
+ *     adjustMapToRoute(destination);
+ *   }}
+ * />
+ * ```
+ */
+
 const Searchbar: React.FC<SearchbarProps> = ({
   onSelectDestination,
   ...props
