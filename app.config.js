@@ -1,4 +1,4 @@
-{
+export default{
   "expo": {
     "name": "gt-front-end",
     "slug": "gt-front-end",
@@ -52,7 +52,7 @@
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZnV6enkyMjY2IiwiYSI6ImNtMGQzaWFqZjA0OTIycXB3YmUyZW42a2kifQ.OrseslYRvmsL6_o4DxV8-w"
+          "RNMapboxMapsDownloadToken": process.env.EXPO_PUBLIC_MAPBOX_STOK
         }
       ],
       [
