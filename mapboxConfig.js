@@ -1,1 +1,1 @@
-export const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiZnV6enkyMjY2IiwiYSI6ImNtMDMyam5jbzA3eWoyam9obG56dDQ0eXgifQ.I28DwMp0Sh1te2N7ODmfgQ';
+export const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_TOK;
