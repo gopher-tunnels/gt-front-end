@@ -5,7 +5,7 @@ import { ThemeProvider } from "styled-components";
 import lightTheme from "./styles/themes/light";
 import Splash from "./app/Splash";
 import { useFonts } from "expo-font";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import fontObject from "./assets/fonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,28 +13,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
+// Set the animation options. This is optional.
+// SplashScreen.setOptions({
+//   duration: 1000,
+//   fade: true,
+// });
+
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontObject);
-  // const [appIsReady, setAppIsReady] = useState(false);
-
-
-  // useEffect(() => {
-  //   async function prepare() {
-  //     try {
-  //       // Pre-load fonts, make any API calls you need to do here
-  //       // Artificially delay for two seconds to simulate a slow loading
-  //       // experience. Please remove this if you copy and paste the code!
-  //       await new Promise(resolve => setTimeout(resolve, 2000));
-  //     } catch (e) {
-  //       console.warn(e);
-  //     } finally {
-  //       // Tell the application to render
-  //       setAppIsReady(true);
-  //     }
-  //   }
-
-  //   prepare();
-  // }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
