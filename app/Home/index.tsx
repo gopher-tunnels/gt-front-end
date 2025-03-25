@@ -3,6 +3,7 @@ import * as Location from "expo-location";
 import CustomMarker from "../../components/CustomMarker";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import Animation from '../../components/Loader';
 
 import MapboxGL from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
@@ -147,6 +148,7 @@ const Home = () => {
           </>
         )}
       </Content>
+      <Animation />
 
       <MapboxGL.MapView
         scaleBarEnabled={false}
