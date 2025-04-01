@@ -148,7 +148,7 @@ const Home = () => {
           </>
         )}
       </Content>
-      <Animation />
+      {/* <Animation /> */} 
 
       <MapboxGL.MapView
         scaleBarEnabled={false}
