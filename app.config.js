@@ -1,4 +1,4 @@
-{
+export default{
   "expo": {
     "name": "gt-front-end",
     "slug": "gt-front-end",
@@ -6,6 +6,11 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
@@ -22,17 +27,6 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      [
-      "expo-splash-screen",
-        {
-          "backgroundColor": "#ffffff",
-          "image": "./assets/splash.png",
-          "dark": {
-            "image": "./assets/splash.png"
-          },
-          "resizeMode": "contain"
-        }
-      ],
       "expo-router",
       [
         "expo-font",
@@ -58,7 +52,7 @@
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZnV6enkyMjY2IiwiYSI6ImNtMGQzaWFqZjA0OTIycXB3YmUyZW42a2kifQ.OrseslYRvmsL6_o4DxV8-w"
+          "RNMapboxMapsDownloadToken": process.env.EXPO_PUBLIC_MAPBOX_STOK
         }
       ],
       [
