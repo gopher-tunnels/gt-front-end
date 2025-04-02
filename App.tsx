@@ -11,6 +11,14 @@ import fontObject from "./assets/fonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
+SplashScreen.preventAutoHideAsync();
+
+// Set the animation options. This is optional.
+// SplashScreen.setOptions({
+//   duration: 1000,
+//   fade: true,
+// });
+
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontObject);
 
