@@ -17,6 +17,7 @@ import DirectionsHeader from "../../components/DirectionsHeader";
 import DirectionsModal from "../../components/DirectionsModal";
 import { buildings } from "../../utils/mock";
 import { getBoundingBox } from "../../utils/functions";
+import LocationMarker from "../../components/LocationMarker";
 export interface types {
   newText: string;
 }
@@ -175,7 +176,21 @@ const Home = () => {
           followZoomLevel={14}
           // followUserLocation={true}
         />
-        <MapboxGL.UserLocation visible={true} />
+        <MapboxGL.UserLocation 
+          visible={true} 
+          children={
+            <LocationMarker/>
+          }
+        /> 
+        {/* {location && (
+          <LocationMarker
+            coordinate={[
+              location.coords.longitude,
+              location.coords.latitude,
+            ]} 
+            allowOverlap={false} 
+            allowOverlapWithPuck={false}            />
+        )} */}
         {buildings
           .filter((building) => !onRoute || building.id === destination.id)
           .map((building) => (
