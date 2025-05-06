@@ -21,6 +21,7 @@ export const SearchInput = styled.TextInput`
   font-size: 18px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.primaryMain};
+  padding-left: 14;
 `;
 
 export const SearchResultContainer = styled.View`
