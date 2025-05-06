@@ -1,3 +1,23 @@
+/**
+ * @description Calculates the bounding box (southwest and northeast corners) of a set of geographic points.
+ *
+ * @param {[number, number][]} points - An array of [longitude, latitude] coordinate pairs.
+ * @returns {{ ne: [number, number]; sw: [number, number] }} An object containing the northeast and southwest corners of the bounding box.
+ *
+ * @example
+ * ```ts
+ * getBoundingBox([
+ *   [-122.5, 37.7],
+ *   [-122.4, 37.8],
+ *   [-122.6, 37.6],
+ * ]);
+ * // Returns:
+ * // {
+ * //   ne: [-122.4, 37.8],
+ * //   sw: [-122.6, 37.6]
+ * // }
+ * ```
+ */
 export const getBoundingBox = (points: [number, number][]) => {
   console.log(points);
   return points.reduce<{
@@ -13,4 +33,25 @@ export const getBoundingBox = (points: [number, number][]) => {
       sw: points[0],
     },
   );
+};
+
+/**
+ * @description Interpolates between two geographic coordinates.
+ *
+ * @param coord1 - The starting coordinate [longitude, latitude].
+ * @param coord2 - The ending coordinate [longitude, latitude].
+ * @param t - A value between 0 and 1 representing interpolation progress.
+ * @returns The interpolated coordinate as [longitude, latitude].
+ */
+export const interpolateCoords = (
+  coord1: number[],
+  coord2: number[],
+  t: number,
+): number[] => {
+  "worklet";
+  const [lon1, lat1] = coord1;
+  const [lon2, lat2] = coord2;
+  const lon = lon1 + (lon2 - lon1) * t;
+  const lat = lat1 + (lat2 - lat1) * t;
+  return [lon, lat];
 };

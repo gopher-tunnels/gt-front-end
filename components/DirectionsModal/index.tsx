@@ -50,6 +50,8 @@ interface DirectionsModalProps {
   distance: { miles: number; meters: number };
   onStartRoute?: () => void;
   onEndRoute?: () => void;
+  loading?: boolean;
+  loadingProgress?: number;
 }
 
 const Clock = (
@@ -70,7 +72,7 @@ const AnimatedContainer = Animated.createAnimatedComponent(Container);
  * @param {{miles: number; meters: number;}} distance - Object describing the distance to the destination in miles and meters.
  * @param {(() => void) | undefined} onStartRoute - function to run on route start. Function doesn't take parameters and returns nothing
  * @param {(() => void) | undefined} onEndRoute - function to run on route end. Function doesn't take parameters and returns nothing
- * 
+ *
  * @returns {React.FC<DirectionsModalProps>} TSX React Functional Component
  *
  * @example
@@ -89,7 +91,7 @@ const AnimatedContainer = Animated.createAnimatedComponent(Container);
  *     ),
  *   }}
  *   distance={{ miles: 0.1, meters: 0.2 }}
- *   eta={{ minutes: 6 }} 
+ *   eta={{ minutes: 6 }}
  *   onStartRoute={() => setOnRoute(true)}
  *   onEndRoute={() => setOnRoute(false)}
  * />
@@ -103,6 +105,8 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   distance,
   onStartRoute,
   onEndRoute,
+  loading,
+  loadingProgress,
 }) => {
   // setup hooks
   const theme = useTheme();
@@ -304,6 +308,8 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
             </IconTextContainer>
           </AnimatedInfoContainer>
           <CustomButton
+            loading={loading}
+            loadingProgress={loadingProgress}
             outerContainerStyle={{ flex: 1, justifyContent: "flex-end" }}
             onPress={() =>
               setNavigationActive((prev) => {
@@ -312,7 +318,13 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
                 return !prev;
               })
             }
-            label={navigationActive ? "End" : "Go"}
+            label={
+              loading
+                ? "Finding your route..."
+                : navigationActive
+                  ? "End"
+                  : "Go"
+            }
             CustomIcon={navigationActive ? undefined : Go}
             variant={navigationActive ? "outlined" : "filled"}
           />
