@@ -7,21 +7,20 @@ import {
   BuildingAddress,
 } from "./styles";
 import house from "../../../assets/m-house.png";
-import { buildings } from "../../../utils/mock";
-
-type BuildingInfo = (typeof buildings)[number];
+import { GetSearchResponse } from "../../../@types/api";
 
 interface SearchResultProps extends ComponentProps<typeof Container> {
-  building: BuildingInfo;
+  building: GetSearchResponse[number];
 }
 
 const SearchResult: React.FC<SearchResultProps> = ({ building, ...props }) => {
   return (
-    <Container key={building.name} {...props}>
+    <Container {...props}>
       <BuildingIcon source={house} />
       <BuildingTextContainer>
-        <BuildingName>{building.name}</BuildingName>
-        <BuildingAddress>{building.address}</BuildingAddress>
+        <BuildingName>{building.buildingName}</BuildingName>
+        {/* // TODO: include this property when included in API return */}
+        <BuildingAddress>TODO</BuildingAddress>
       </BuildingTextContainer>
     </Container>
   );
