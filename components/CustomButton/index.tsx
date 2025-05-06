@@ -25,17 +25,17 @@ interface CustomButtonProps extends React.ComponentProps<typeof Container> {
  * @param {StyleProp<ViewStyle>} style - Either view styles or a function that receives a boolean reflecting whether the component is currently pressed and returns view styles.
  * @param {"filled" | "outlined" | undefined} variant - flips color scheme of button to look "filled" or "outlined" otherwise undefined
  * @param {boolean | undefined} loading - boolean value, if button loading or not
- * 
+ *
  * @returns {React.FC<CustomButtonProps>} TSX React Functional Component
- * 
+ *
  * @example
  * ```tsx
  * <CustomButton
  *   outerContainerStyle={{ flex: 1, justifyContent: "flex-end" }}
  *   onPress={() =>
-*      setNavigationActive((prev) => {
-*        if (prev && onEndRoute) onEndRoute();
-*        if (!prev && onStartRoute) onStartRoute();
+ *      setNavigationActive((prev) => {
+ *        if (prev && onEndRoute) onEndRoute();
+ *        if (!prev && onStartRoute) onStartRoute();
  *       return !prev;
  *     })
  *   }
@@ -65,9 +65,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
       maskElement={
         <MaskWrapper>
           <Mask
-            style={{
+            animate={{
               transform: [{ scaleX: loading ? (loadingProgress ?? 0) : 1 }],
             }}
+            transition={{ type: "spring" }}
           />
         </MaskWrapper>
       }
