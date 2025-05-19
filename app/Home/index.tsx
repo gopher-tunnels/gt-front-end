@@ -17,7 +17,7 @@ import DirectionsHeader from "../../components/DirectionsHeader";
 import DirectionsModal from "../../components/DirectionsModal";
 import { buildings } from "../../utils/mock";
 import { getBoundingBox } from "../../utils/functions";
-import LocationMarker from "../../components/LocationMarker";
+import userMarker from "../../assets/userMarker.png"
 export interface types {
   newText: string;
 }
@@ -176,21 +176,18 @@ const Home = () => {
           followZoomLevel={14}
           // followUserLocation={true}
         />
-        <MapboxGL.UserLocation 
-          visible={true} 
-          children={
-            <LocationMarker/>
-          }
-        /> 
-        {/* {location && (
-          <LocationMarker
-            coordinate={[
-              location.coords.longitude,
-              location.coords.latitude,
-            ]} 
-            allowOverlap={false} 
-            allowOverlapWithPuck={false}            />
-        )} */}
+        <MapboxGL.Images images={{ 'user-marker': userMarker }}/>
+        <MapboxGL.UserLocation>
+          <MapboxGL.SymbolLayer
+            id={'custom-user-symbol'}
+            style={{
+              iconImage: 'user-marker',
+              iconRotationAlignment: 'map',
+              iconAllowOverlap: true,
+              iconSize: 0.6
+            }}
+            />
+        </MapboxGL.UserLocation>
         {buildings
           .filter((building) => !onRoute || building.id === destination.id)
           .map((building) => (
