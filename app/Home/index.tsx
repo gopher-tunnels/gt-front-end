@@ -18,6 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DirectionsHeader from "../../components/DirectionsHeader";
 import DirectionsModal from "../../components/DirectionsModal";
 import { getBoundingBox } from "../../utils/functions";
+import userMarker from "../../assets/userMarker.png"
 import { getBuildings, getRoute } from "../../services/api";
 import PathComponent from "../../components/PathComponent";
 import { GetBuildingsResponse, GetRouteResponse } from "../../@types/api";
@@ -262,7 +263,18 @@ const Home = () => {
           followZoomLevel={14}
           // followUserLocation={true}
         />
-        <MapboxGL.UserLocation visible={true} />
+        <MapboxGL.Images images={{ 'user-marker': userMarker }}/>
+        <MapboxGL.UserLocation>
+          <MapboxGL.SymbolLayer
+            id={'custom-user-symbol'}
+            style={{
+              iconImage: 'user-marker',
+              iconRotationAlignment: 'map',
+              iconAllowOverlap: true,
+              iconSize: 0.6
+            }}
+            />
+        </MapboxGL.UserLocation>
         {currentRoute && (
           <PathComponent
             coordinates={currentRoute.steps.map((step) => [
