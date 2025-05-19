@@ -1,27 +1,33 @@
-import React, { ComponentProps, useState } from "react";
+import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { ScrollView, TextInput } from "react-native";
 import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
 import SearchResult from "./SearchResult";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import CustomChip from "../CustomChip";
-import Animated, { Easing, SlideInUp, SlideOutUp } from "react-native-reanimated";
-import { buildings } from "../../utils/mock";
+import Animated, {
+  Easing,
+  SlideInUp,
+  SlideOutUp,
+} from "react-native-reanimated";
+import { getPopular, getSearchResults } from "../../services/api";
+import { GetPopularResponse, GetSearchResponse } from "../../@types/api";
 
-type BuildingInfo = ComponentProps<typeof SearchResult>["building"];
+type BuildingInfo = GetSearchResponse[number];
 
 const AnimatedContainer = Animated.createAnimatedComponent(Container);
 
 interface SearchbarProps extends ComponentProps<typeof SearchInput> {
-  // TODO: make required and modify logic to work with backend
-  onSelectDestination?: (dest: BuildingInfo) => void;
+  onSelectDestination: (
+    dest: BuildingInfo | GetPopularResponse[number],
+  ) => void;
 }
 
 /**
  * @description A styled search bar with text input
  *
  * @param {((dest: BuildingInfo) => void) | undefined} onSelectDestination - function to run when user selects a destination from the search bar. Function takes parameter of type BuildingInfo and doesn't return anything
- * 
+ *
  * @returns {React.FC<CustomChipProps>} TSX React Functional Component
  *
  * @example
@@ -41,19 +47,24 @@ const Searchbar: React.FC<SearchbarProps> = ({
 }) => {
   const theme = useTheme();
   const [inputText, setInputText] = React.useState("");
-  const [buildingResults, setBuildingResults] = React.useState<BuildingInfo[]>(
-    [],
-  );
-  const [popularDestinations, setPopularDestinations] = useState<
-    BuildingInfo[]
-  >(
-    // TODO: set to value from backend
-    buildings,
-  );
-  const inputRef = React.useRef<TextInput | null>(null);
+  const [buildingResults, setBuildingResults] = useState<GetSearchResponse>([]);
+  const [popularDestinations, setPopularDestinations] =
+    useState<GetPopularResponse>([]);
+  const inputRef = useRef<TextInput | null>(null);
 
   const showResults =
-    inputRef.current?.isFocused() && buildingResults.length > 0;
+    inputRef.current?.isFocused() && buildingResults.length > 0 && inputText;
+
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log("popular destinations: ", await getPopular());
+        setPopularDestinations(await getPopular());
+      } catch (e) {
+        console.log("error getting popular routes: ", e);
+      }
+    })();
+  }, []);
 
   return (
     <AnimatedContainer
@@ -78,22 +89,16 @@ const Searchbar: React.FC<SearchbarProps> = ({
           color={theme.colors.primary7}
         />
         <SearchInput
-          style={{ paddingLeft: 14 }}
           placeholder="Where to?"
           selectionColor={theme.colors.primaryMain}
           cursorColor={theme.colors.primaryMain}
           placeholderTextColor={theme.colors.primary4}
           value={inputText}
-          onChangeText={(newVal) => {
+          onChangeText={async (newVal) => {
             setInputText(newVal);
             // TODO: modify search logic
-            setBuildingResults(
-              newVal
-                ? buildings.filter((building) =>
-                    building.name.toLowerCase().includes(newVal.toLowerCase()),
-                  )
-                : [],
-            );
+            if (newVal)
+              setBuildingResults(await getSearchResults(newVal.toLowerCase()));
           }}
           {...props}
           ref={inputRef}
@@ -102,7 +107,14 @@ const Searchbar: React.FC<SearchbarProps> = ({
       <SearchResultContainer style={{ display: showResults ? "flex" : "none" }}>
         <ScrollView>
           {buildingResults.map((building) => (
-            <SearchResult key={building.address} building={building} />
+            <SearchResult
+              key={building.id}
+              building={building}
+              onPress={() => {
+                onSelectDestination(building);
+                setInputText("");
+              }}
+            />
           ))}
         </ScrollView>
       </SearchResultContainer>
@@ -113,13 +125,13 @@ const Searchbar: React.FC<SearchbarProps> = ({
           style={{ paddingTop: 6, overflow: "visible" }}
           contentContainerStyle={{ gap: 6 }}
         >
-          {popularDestinations.slice(0, 5).map((destination) => (
+          {popularDestinations?.slice(0, 5).map((destination) => (
             <CustomChip
               onPress={() => {
                 if (onSelectDestination) onSelectDestination(destination);
               }}
               key={destination.id}
-              label={destination.name}
+              label={destination.buildingName}
               type="default"
             />
           ))}

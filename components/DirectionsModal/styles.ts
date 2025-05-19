@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 export const Container = styled.View`
   gap: 8px;
   padding: 16px;
-  padding-bottom: 0;
+  padding-bottom: 0px;
 `;
 
 export const Content = styled.View`
