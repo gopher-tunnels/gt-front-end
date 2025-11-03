@@ -7,6 +7,7 @@ import MaskedView from "@react-native-masked-view/masked-view";
 
 interface CustomButtonProps extends React.ComponentProps<typeof Container> {
   label: string;
+  disabled: boolean;
   loadingLabel?: string;
   CustomIcon?: React.ReactNode;
   loadingProgress?: number;
@@ -78,6 +79,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         disabled={loading || disabled}
         style={({ pressed }) => ({
           ...(pressed ? { opacity: 0.8 } : {}),
+          ...(disabled ? { opacity: 0.2 } : {}),
           ...((typeof style === "function"
             ? style({ pressed })
             : style) as object),

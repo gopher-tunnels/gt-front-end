@@ -1,37 +1,44 @@
-export default{
-  "expo": {
-    "name": "gt-front-end",
-    "slug": "gt-front-end",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "dark",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.adcumn.gophertunnels"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+export default {
+  expo: {
+    name: "GopherTunnels",
+    slug: "GT",
+    // newArchEnabled: false,
+    version: "1.0.0",
+    orientation: "portrait",
+    icon: "./assets/icon.png",
+    userInterfaceStyle: "dark",
+    splash: {
+      image: "./assets/splashLight.png",
+      resizeMode: "cover",
+      backgroundColor: "#812228",
+      dark: {
+        image: "./assets/splashDark.png",
+        resizeMode: "cover",
+        backgroundColor: "#37000B",
       },
-      "package": "com.anonymous.gtfrontend"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    assetBundlePatterns: ["**/*"],
+    ios: {
+      icon: "./assets/GopherTunnels.icon",
+      supportsTablet: false,
+      bundleIdentifier: "com.adcumn.gophertunnels",
     },
-    "plugins": [
+    android: {
+      adaptiveIcon: {
+        foregroundImage: "./assets/adaptive-icon.png",
+        backgroundColor: "#ffffff",
+      },
+      package: "com.adcumn.gophertunnels",
+    },
+    web: {
+      favicon: "./assets/adaptive-icon.png",
+    },
+    plugins: [
       "expo-router",
       [
         "expo-font",
         {
-          "fonts": [
+          fonts: [
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Bold.ttf",
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-BoldItalic.ttf",
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-ExtraBold.ttf",
@@ -45,30 +52,30 @@ export default{
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-MediumItalic.ttf",
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-Regular.ttf",
             "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBold.ttf",
-            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBoldItalic.ttf"
-          ]
-        }
+            "./assets/fonts/PlusJakartaSans/PlusJakartaSans-SemiBoldItalic.ttf",
+          ],
+        },
       ],
       [
         "@rnmapbox/maps",
         {
-          "RNMapboxMapsDownloadToken": process.env.EXPO_PUBLIC_MAPBOX_STOK
-        }
+          RNMapboxMapsDownloadToken: process.env.EXPO_PUBLIC_MAPBOX_STOK,
+        },
       ],
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Show current location on map."
-        }
-      ]
+          locationWhenInUsePermission: "Show current location on map.",
+        },
+      ],
     ],
-    "extra": {
-      "router": {
-        "origin": false
+    extra: {
+      router: {
+        origin: false,
       },
-      "eas": {
-        "projectId": "56f6e6cb-c147-432d-bada-b229ac048dd3"
-      }
-    }
-  }
-}
+      eas: {
+        projectId: "56f6e6cb-c147-432d-bada-b229ac048dd3",
+      },
+    },
+  },
+};

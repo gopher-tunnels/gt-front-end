@@ -1,76 +1,107 @@
 import React from "react";
-import { Container, Label, Progress } from "./styles";
+import { Container, InstructionLabel, LeadingLabel, Progress } from "./styles";
 import Indicator from "./Indicator";
 import { StyleProp, ViewStyle } from "react-native";
-import { DirectionsHeaderProps } from "..";
+import { GetRouteResponse } from "../../../@types/api";
 
-const directionLabels = {
+const defaultDirectionLabels = {
   right: "Take a right",
   left: "Take a left",
   forward: "Head straight",
   enter: "Enter the tunnel",
+  elevator: "Take the elevator",
+  final: "You've arrived!",
 };
 
 interface DirectionContainerProps {
-  type: DirectionsHeaderProps["directions"][number]; //TODO: unify with IndicatorProps
+  type: GetRouteResponse["steps"][number]["instruction"]["type"]; //TODO: unify with IndicatorProps
+  label?: string;
   progress?: number;
   nextVariant?: boolean;
   style?: StyleProp<ViewStyle>;
   animate?: React.ComponentProps<typeof Container>["animate"];
   transition?: React.ComponentProps<typeof Container>["transition"];
+  exit?: React.ComponentProps<typeof Container>["exit"];
 }
 
 const DirectionContainer: React.FC<DirectionContainerProps> = ({
+  label,
   type,
   progress = 0,
   nextVariant = false,
   animate,
   transition,
+  exit,
   ...props
 }) => {
+  const exitAnimation =
+    exit ||
+    (nextVariant
+      ? {
+          opacity: 0,
+          transform: [{ translateY: -10 }, { scale: 0.9 }],
+          height: 0,
+          marginBottom: -8,
+        }
+      : {
+          opacity: 0,
+          transform: [{ translateY: -24 }],
+          height: 0,
+          marginBottom: -8,
+        });
   return (
     <Container
+      // style={{ backgroundColor: "blue" }}
       nextVariant={nextVariant ?? false}
       from={{ transform: [{ translateX: nextVariant ? 200 : 0 }] }}
       animate={{
         width: nextVariant ? "55%" : "100%",
-        height: nextVariant ? 40 : 80,
         borderRadius: nextVariant ? 10 : 20,
+        paddingVertical: nextVariant ? 6 : 12,
         transform: [{ translateX: 0 }],
         ...animate,
       }}
       transition={{ type: "timing", ...transition }}
+      exit={exitAnimation}
       {...props}
     >
-      <Label
+      <LeadingLabel
         numberOfLines={1}
-        nextVariant={nextVariant ?? false}
+        accessible={nextVariant}
+        accessibilityElementsHidden={!nextVariant}
+        importantForAccessibility={nextVariant ? "auto" : "no-hide-descendants"}
         animate={{
-          width: nextVariant ? 35 : 0,
-          marginLeft: nextVariant ? 2 : 0,
-          marginRight: nextVariant ? 10 : 0,
-          transform: [{ scaleX: nextVariant ? 1 : 0 }],
-          // fontSize: nextVariant ? 16 : 24,
+          opacity: nextVariant ? 1 : 0,
+          width: nextVariant ? 42 : 0,
+          marginRight: nextVariant ? 6 : 0,
         }}
         transition={{ type: "timing" }}
       >
         Then
-      </Label>
+      </LeadingLabel>
 
       <Indicator step={type} size={nextVariant ? 24 : 64} />
-      <Label
-        nextVariant={nextVariant ?? false}
+      <InstructionLabel
+        numberOfLines={nextVariant ? 1 : undefined}
+        ellipsizeMode={nextVariant ? "tail" : "clip"}
         animate={{
-          marginLeft: nextVariant ? 8 : 23,
+          marginLeft: nextVariant ? 8 : 20,
           marginRight: nextVariant ? 10 : 0,
-          transform: [{ scale: nextVariant ? 1 : 1.5 }],
-          // fontSize: nextVariant ? 16 : 24,
+          fontSize: nextVariant ? 16 : 20,
+          lineHeight: nextVariant ? 20 : 30,
         }}
         transition={{ type: "timing" }}
       >
-        {directionLabels[type]}
-      </Label>
-      <Progress animate={{ transform: [{ scaleX: progress ?? 0 }] }} />
+        {label || defaultDirectionLabels[type]}
+      </InstructionLabel>
+      <Progress
+        pointerEvents="none"
+        animate={{
+          transform: [{ scaleX: progress }],
+          opacity: nextVariant ? 1 : 0,
+        }}
+        transition={{ type: "timing" }}
+      />
     </Container>
   );
 };

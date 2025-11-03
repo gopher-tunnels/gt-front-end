@@ -19,10 +19,12 @@ import { View } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import CustomButton from "../CustomButton";
 
+import { Skeleton } from "moti/skeleton";
+
 import { HeadingContainer } from "./styles";
 import { useTheme } from "styled-components/native";
 import dayjs from "dayjs";
-import duration, { DurationUnitsObjectType } from "dayjs/plugin/duration";
+import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 import {
   Gesture,
@@ -34,24 +36,41 @@ import {
 } from "react-native-gesture-handler";
 import Animated, {
   Easing,
-  SlideInDown,
-  SlideOutDown,
+  useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import type { SharedValue } from "react-native-reanimated";
+import type { LayoutChangeEvent } from "react-native";
+import { BuildingInfo } from "../../@types/api";
+import { formatDurationShort, secondsToDuration } from "../../utils/functions";
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
-interface DirectionsModalProps {
-  destinationInfo: { id: string; name: string; opens: Date[]; closes: Date[] };
-  eta: DurationUnitsObjectType;
+const legendChipsData = [
+  { label: "Tunnel", type: "tunnel" },
+  { label: "Skyway", type: "skyway" },
+  { label: "Sidewalk", type: "sidewalk" },
+] as const;
+
+export interface DirectionsModalProps {
+  active?: boolean;
+  destinationInfo: {
+    id: string;
+    name: string;
+    opens: BuildingInfo["opens"];
+    closes: BuildingInfo["closes"];
+  };
+  eta: number | null;
+  routeProgress?: number;
   distance: { miles: number; meters: number };
   onStartRoute?: () => void;
   onEndRoute?: () => void;
   loading?: boolean;
   loadingProgress?: number;
+  startRouteDisabled?: boolean;
 }
 
 const Clock = (
@@ -62,7 +81,10 @@ const Go = <MaterialIcons name="route" color="white" size={24} />;
 
 const AnimatedInfoContainer = Animated.createAnimatedComponent(InfoContainer);
 
-const AnimatedContainer = Animated.createAnimatedComponent(Container);
+interface DirectionsModalComponentProps extends DirectionsModalProps {
+  legendTranslation: SharedValue<number>;
+  onContainerLayout?: (event: LayoutChangeEvent) => void;
+}
 
 /**
  * @description Component from which the user can control and see information about their route and destination. Designed to appear on the bottom of the screen.
@@ -99,14 +121,19 @@ const AnimatedContainer = Animated.createAnimatedComponent(Container);
  * ```
  */
 
-const DirectionsModal: React.FC<DirectionsModalProps> = ({
+const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
+  active,
   destinationInfo,
   eta,
+  routeProgress,
   distance,
   onStartRoute,
   onEndRoute,
   loading,
   loadingProgress,
+  legendTranslation,
+  onContainerLayout,
+  startRouteDisabled,
 }) => {
   // setup hooks
   const theme = useTheme();
@@ -118,7 +145,6 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
   const sideInfoContainerFlexGrow = useSharedValue(navigationActive ? 1 : 0);
   const topInfoContainerHeight = useSharedValue(-1);
   const topInfoContainerMarginBottom = useSharedValue(12);
-  const bottomSheetTranslation = useSharedValue(0);
   // legend bottom sheet utils
   const snapPoints = useMemo(() => [0, 100], []);
   const lastSnapPoint = useRef(snapPoints[0]);
@@ -133,9 +159,9 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
           >,
     ) => {
       "worklet";
-      bottomSheetTranslation.value = e.translationY + lastSnapPoint.current;
+      legendTranslation.value = e.translationY + lastSnapPoint.current;
     },
-    [bottomSheetTranslation],
+    [legendTranslation],
   );
   const handlePanFinalize = useCallback(
     (e: GestureStateChangeEvent<PanGestureHandlerEventPayload>) => {
@@ -147,13 +173,13 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
             : acc,
         0,
       );
-      bottomSheetTranslation.value = withSpring(target, {
-        damping: 25,
-        stiffness: 350,
+      legendTranslation.value = withSpring(target, {
+        damping: 60,
+        stiffness: 1000,
       });
       lastSnapPoint.current = target;
     },
-    [snapPoints, bottomSheetTranslation],
+    [snapPoints, legendTranslation],
   );
   const pan = Gesture.Pan()
     .runOnJS(true)
@@ -162,23 +188,62 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
     .onFinalize(handlePanFinalize);
 
   const dayjsEta = useMemo(() => {
-    return dayjs.duration(eta);
-  }, [JSON.stringify(eta)]);
+    return secondsToDuration(eta * (routeProgress || 1));
+  }, [eta, routeProgress]);
+
+  const formattedDayjsEta = useMemo(() => {
+    return formatDurationShort(dayjsEta);
+  }, [dayjsEta]);
 
   // boolean representing whether the building is currently open
   const isOpen = useMemo(() => {
     const now = dayjs();
-    const opensToday = dayjs(destinationInfo.opens[now.day()])
+    if (destinationInfo?.opens[now.day()] === "") return false;
+    const opensToday = dayjs(destinationInfo?.opens?.[now.day()])
       .year(now.year())
       .month(now.month())
       .date(now.date());
-    const closesToday = dayjs(destinationInfo.closes[now.day()])
+    const closesToday = dayjs(destinationInfo?.closes?.[now.day()])
       .year(now.year())
       .month(now.month())
       .date(now.date());
 
     return now.isAfter(opensToday) && now.isBefore(closesToday);
   }, [destinationInfo.opens, destinationInfo.closes]);
+
+  const nextOpening = useMemo(() => {
+    if (!destinationInfo?.opens?.length) return null;
+    const now = dayjs();
+    for (let offset = 0; offset < 7; offset++) {
+      const dayIndex = (now.day() + offset) % 7;
+      const openRaw = destinationInfo.opens?.[dayIndex];
+      if (!openRaw) continue;
+      const base = dayjs(openRaw);
+      if (!base.isValid()) continue;
+      const candidate = base
+        .year(now.year())
+        .month(now.month())
+        .date(now.date())
+        .add(offset, "day");
+      if (candidate.isBefore(now)) continue;
+      return {
+        time: candidate,
+        offset,
+      };
+    }
+    return null;
+  }, [destinationInfo.opens]);
+
+  const nextOpeningText = useMemo(() => {
+    if (!nextOpening) return null;
+    const suffix =
+      nextOpening.offset <= 1
+        ? " tomorrow"
+        : nextOpening.offset > 1
+          ? ` on ${nextOpening.time.format("dddd")}`
+          : "";
+    return `${nextOpening.time.format("h:mmA")}${suffix}`;
+  }, [nextOpening]);
 
   // transition animations
   useEffect(() => {
@@ -201,27 +266,28 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
     );
   }, [navigationActive]);
 
+  const legendAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: legendTranslation.value }],
+  }));
+
+  const pointerEvents = active ? "auto" : "none";
+
   return (
-    <AnimatedContainer
-      entering={SlideInDown.duration(500).easing(Easing.out(Easing.exp))}
-      exiting={SlideOutDown.duration(500).easing(Easing.in(Easing.exp))}
-    >
-      <Animated.View
-        style={{ transform: [{ translateY: bottomSheetTranslation }] }}
-      >
+    <Container pointerEvents={pointerEvents} onLayout={onContainerLayout}>
+      <Animated.View style={legendAnimatedStyle}>
         <GestureDetector gesture={pan}>
           <BottomSheetHandle />
         </GestureDetector>
         <Content>
           <StyledText variant="miniHeader">Legend</StyledText>
           <LegendContainer>
-            <CustomChip label="Tunnel" type="tunnel" style={{ flexGrow: 1 }} />
-            <CustomChip label="Skyway" type="skyway" style={{ flexGrow: 1 }} />
-            <CustomChip
-              label="Sidewalk"
-              type="sidewalk"
-              style={{ flexGrow: 1 }}
-            />
+            {legendChipsData.map((props) => (
+              <CustomChip
+                {...props}
+                key={props.label}
+                style={{ flexGrow: 1 }}
+              />
+            ))}
           </LegendContainer>
         </Content>
       </Animated.View>
@@ -246,7 +312,16 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
             <StyledText variant="header">{destinationInfo.name}</StyledText>
             <IconTextContainer>
               <MaterialIcons name="directions-walk" size={16} />
-              <StyledText>{dayjsEta.humanize()}</StyledText>
+              <Skeleton
+                colorMode="light"
+                show={loading || (eta == null && eta == undefined)}
+              >
+                <StyledText>
+                  {eta !== null && eta !== undefined
+                    ? dayjsEta.humanize()
+                    : "x minutes"}
+                </StyledText>
+              </Skeleton>
             </IconTextContainer>
           </HeadingContainer>
           <IconTextContainer>
@@ -257,8 +332,15 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
             <StyledText style={{ color: "gray" }}>
               ⋅ {isOpen ? "Closes" : "Opens"} at{" "}
               {isOpen
-                ? dayjs(destinationInfo.closes[dayjs().day()]).format("HH:MM")
-                : dayjs(destinationInfo.opens[dayjs().day()]).format("HH:MM")}
+                ? dayjs(destinationInfo?.closes?.[dayjs().day() + 1]).format(
+                    "h:mmA",
+                  )
+                : (nextOpeningText ??
+                  (destinationInfo?.opens?.[dayjs().day()]
+                    ? dayjs(destinationInfo.opens[dayjs().day()]).format(
+                        "h:mmA",
+                      )
+                    : "—"))}
             </StyledText>
           </IconTextContainer>
         </AnimatedInfoContainer>
@@ -285,7 +367,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
                 weight="Bold"
                 style={{ color: theme.colors.primaryMain }}
               >
-                {`${dayjsEta.hours() ? dayjsEta.hours() + "h" : ""}${dayjsEta.minutes() + (dayjsEta.hours() ? "m" : " min")}`}
+                {formattedDayjsEta}
               </StyledText>
               <StyledText
                 style={{ color: "gray" }}
@@ -293,7 +375,10 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
                 ellipsizeMode="clip"
               >
                 {" "}
-                ⋅ {distance.miles} mi
+                ⋅{" "}
+                {distance.miles
+                  ? `${distance.miles.toFixed(1)}\u00A0mi`
+                  : `${distance.meters.toFixed(1)}\u00A0m`}
               </StyledText>
             </View>
             <IconTextContainer>
@@ -302,13 +387,14 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
                 numberOfLines={1}
                 ellipsizeMode="clip"
               >
-                ETA {dayjs().add(dayjsEta).format("HH:MM")}
+                ETA {dayjs().add(dayjsEta).format("h:mmA")}
               </StyledText>
               <MaterialIcons name="directions-walk" size={16} color="gray" />
             </IconTextContainer>
           </AnimatedInfoContainer>
           <CustomButton
-            loading={loading}
+            disabled={!!startRouteDisabled}
+            loading={!navigationActive && loading}
             loadingProgress={loadingProgress}
             outerContainerStyle={{ flex: 1, justifyContent: "flex-end" }}
             onPress={() =>
@@ -330,7 +416,7 @@ const DirectionsModal: React.FC<DirectionsModalProps> = ({
           />
         </PreNavContainer>
       </Content>
-    </AnimatedContainer>
+    </Container>
   );
 };
 

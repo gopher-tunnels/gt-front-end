@@ -1,6 +1,7 @@
+import { MotiView } from "moti";
 import styled from "styled-components/native";
 
-export const Container = styled.View`
+export const Container = styled(MotiView)`
   gap: 8px;
   padding: 16px;
   padding-bottom: 0px;

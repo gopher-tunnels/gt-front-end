@@ -1,4 +1,3 @@
-import { TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import styled from "styled-components/native";
 
@@ -18,10 +17,11 @@ export const Map = styled(MapView)`
 
 export const Content = styled.View`
   z-index: 1;
-  flex: 1;
-  width: 100%;
-  height: 100%;
   position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   justify-content: space-between;
 `;
 

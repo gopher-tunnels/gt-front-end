@@ -1,0 +1,208 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "automatic-gradient" : "display-p3:0.43363,0.16885,0.17321,1.00000"
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.15336,0.09361,0.09515,1.00000",
+          "display-p3:0.22946,0.08935,0.09165,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "blur-material-specializations" : [
+        {
+          "value" : 0.5
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "hidden" : false,
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "Gopher.svg",
+          "name" : "Gopher",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              -117
+            ]
+          }
+        }
+      ],
+      "lighting" : "individual",
+      "position" : {
+        "scale" : 1.63,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow-specializations" : [
+        {
+          "value" : {
+            "kind" : "layer-color",
+            "opacity" : 0.25
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "kind" : "neutral",
+            "opacity" : 0.25
+          }
+        }
+      ],
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.5
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.3
+          }
+        }
+      ]
+    },
+    {
+      "blend-mode" : "normal",
+      "blur-material-specializations" : [
+        {
+          "value" : 1
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 0.8
+        }
+      ],
+      "layers" : [
+        {
+          "image-name" : "Tunnel.svg",
+          "name" : "Tunnel",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              56
+            ]
+          }
+        }
+      ],
+      "name" : "Group",
+      "position" : {
+        "scale" : 1.63,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow-specializations" : [
+        {
+          "value" : {
+            "kind" : "layer-color",
+            "opacity" : 0.5
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "kind" : "neutral",
+            "opacity" : 0.5
+          }
+        }
+      ],
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.75
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.3
+          }
+        }
+      ]
+    },
+    {
+      "blur-material-specializations" : [
+        {
+          "value" : 0.5
+        },
+        {
+          "appearance" : "tinted",
+          "value" : 1
+        }
+      ],
+      "layers" : [
+        {
+          "image-name" : "Marker.svg",
+          "name" : "Marker",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "name" : "Group",
+      "position" : {
+        "scale" : 1.63,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
+      "shadow" : {
+        "kind" : "layer-color",
+        "opacity" : 0.5
+      },
+      "specular" : true,
+      "translucency-specializations" : [
+        {
+          "value" : {
+            "enabled" : true,
+            "value" : 0.5
+          }
+        },
+        {
+          "appearance" : "tinted",
+          "value" : {
+            "enabled" : true,
+            "value" : 0.25
+          }
+        }
+      ]
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

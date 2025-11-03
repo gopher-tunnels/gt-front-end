@@ -1,35 +1,24 @@
-import styled from 'styled-components/native';
-import { MotiText, MotiView } from 'moti';
+import styled from "styled-components/native";
+import { MotiText, MotiView } from "moti";
 
 interface ContainerProps {
   nextVariant: boolean;
 }
 
-interface LabelProps {
-  nextVariant: boolean;
-}
-
 export const Container = styled(MotiView)<ContainerProps>`
-  padding: 0 10px;
+  padding: 10px;
   align-items: center;
-  /* width: 90%;
-  height: 80px; */
-  /* width: ${({ nextVariant }) => (nextVariant ? 'content' : '100%')};
-  height: ${({ nextVariant }) => (nextVariant ? '40px' : '80px')}; */
-  /* background-color: ${({ theme }) => theme.colors.secondary3}cc; */
   background-color: ${({ theme, nextVariant }) =>
-    nextVariant ? theme.colors.secondary3 + 'cc' : theme.colors.secondaryMain};
-  /* border-radius: ${({ nextVariant }) => (nextVariant ? '10px' : '20px')}; */
+    nextVariant ? theme.colors.secondary3 + "cc" : theme.colors.secondaryMain};
   flex-direction: row;
   overflow: hidden;
   transform-origin: right;
-  /* transform: scale(${({ nextVariant }) => (nextVariant ? 1 : 1)}); */
 `;
 
 export const Progress = styled(MotiView)`
   background-color: ${({ theme }) => theme.colors.secondaryMain};
   width: 106.5%;
-  height: 80px;
+  height: 200%;
   position: absolute;
   top: 0;
   left: 0;
@@ -37,14 +26,21 @@ export const Progress = styled(MotiView)`
   transform-origin: left;
 `;
 
-export const Label = styled(MotiText)<LabelProps>`
+export const LeadingLabel = styled(MotiText)`
   color: ${({ theme }) => theme.colors.primaryMain};
   z-index: 10;
   text-align: center;
-  font-family: 'PlusJakartaSans-Bold';
+  font-family: "PlusJakartaSans-Bold";
   font-weight: bold;
-  overflow: hidden;
-  transform-origin: left;
+`;
 
+export const InstructionLabel = styled(MotiText)`
+  flex: 1;
+  color: ${({ theme }) => theme.colors.primaryMain};
+  z-index: 10;
+  text-align: left;
+  font-family: "PlusJakartaSans-Bold";
+  font-weight: bold;
+  transform-origin: left;
   text-align-vertical: center;
 `;

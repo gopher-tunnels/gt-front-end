@@ -19,8 +19,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ building, ...props }) => {
       <BuildingIcon source={house} />
       <BuildingTextContainer>
         <BuildingName>{building.buildingName}</BuildingName>
-        {/* // TODO: include this property when included in API return */}
-        <BuildingAddress>TODO</BuildingAddress>
+        <BuildingAddress>{building.address}</BuildingAddress>
       </BuildingTextContainer>
     </Container>
   );

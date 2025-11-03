@@ -13,6 +13,8 @@ const icons: Record<
   left: "turn-left",
   forward: "arrow-upward",
   enter: "login",
+  elevator: "elevator",
+  final: "check",
 };
 
 interface IndicatorProps {

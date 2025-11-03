@@ -1,11 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import Home from "./app/Home";
-import { ThemeProvider } from "styled-components";
-import lightTheme from "./styles/themes/light";
-import Splash from "./app/Splash";
-import { useFonts } from "expo-font";
 import React, { useCallback } from "react";
+import { StyleSheet, View } from "react-native";
+import Home from "./app/Home";
+import { ThemeProvider } from "styled-components/native";
+import lightTheme from "./styles/themes/light";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import fontObject from "./assets/fonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -35,7 +33,7 @@ export default function App() {
   return (
     // TODO: set up theme switching
     <SafeAreaProvider>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={styles.gestureRoot}>
         <ThemeProvider theme={lightTheme}>
           <View style={styles.container} onLayout={onLayoutRootView}>
             <Home />
@@ -47,10 +45,11 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  gestureRoot: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
