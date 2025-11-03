@@ -12,6 +12,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { getPopular, getSearchResults } from "../../services/api";
 import { GetPopularResponse, GetSearchResponse } from "../../@types/api";
+import { devLog } from "../../utils/functions";
 
 type BuildingInfo = GetSearchResponse[number];
 
@@ -58,10 +59,10 @@ const Searchbar: React.FC<SearchbarProps> = ({
   useEffect(() => {
     (async () => {
       try {
-        console.log("popular destinations: ", await getPopular());
+        devLog("popular destinations: ", await getPopular());
         setPopularDestinations(await getPopular());
       } catch (e) {
-        console.log("error getting popular routes: ", e);
+        devLog("error getting popular routes: ", e);
       }
     })();
   }, []);

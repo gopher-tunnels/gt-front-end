@@ -56,18 +56,14 @@ export default {
           ],
         },
       ],
-      [
-        "@rnmapbox/maps",
-        {
-          RNMapboxMapsDownloadToken: process.env.EXPO_PUBLIC_MAPBOX_STOK,
-        },
-      ],
+      ["@rnmapbox/maps", {}],
       [
         "expo-location",
         {
           locationWhenInUsePermission: "Show current location on map.",
         },
       ],
+      "expo-secure-store",
     ],
     extra: {
       router: {

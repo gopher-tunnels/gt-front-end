@@ -22,7 +22,7 @@ import { Duration } from "dayjs/plugin/duration";
  * ```
  */
 export const getBoundingBox = (points: [number, number][]) => {
-  console.log(points);
+  devLog(points);
   return points.reduce<{
     ne: (typeof points)[number];
     sw: (typeof points)[number];
@@ -77,4 +77,9 @@ export const formatDurationShort = (duration: Duration) => {
   if (duration.get("seconds") >= 30)
     return duration.format("s\u00A0[s]ec").replace(/\.\d+/, "");
   return "Soon";
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const devLog = (...args: any[]): void => {
+  if (__DEV__) console.log(...args);
 };

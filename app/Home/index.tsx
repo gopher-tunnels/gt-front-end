@@ -18,7 +18,7 @@ import SearchBar from "../../components/Searchbar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DirectionsHeader from "../../components/DirectionsHeader";
 import BottomControls from "../../components/BottomControls";
-import { getBoundingBox, metersToMiles } from "../../utils/functions";
+import { devLog, getBoundingBox, metersToMiles } from "../../utils/functions";
 import { getBuildings, getRoute } from "../../services/api";
 import PathComponent from "../../components/PathComponent";
 import { GetBuildingsResponse, GetRouteResponse } from "../../@types/api";
@@ -80,7 +80,7 @@ const Home = () => {
           [location.coords.longitude, location.coords.latitude],
           [building.longitude, building.latitude],
         ]);
-        // console.log(boundingBox);
+        // devLog(boundingBox);
         cameraRef.current?.fitBounds(
           boundingBox.ne,
           boundingBox.sw,
@@ -131,7 +131,7 @@ const Home = () => {
         );
         setCurrentRoute(data);
       } catch (e) {
-        console.log("error re-routing: ", e);
+        devLog("error re-routing: ", e);
       } finally {
         setLoadingProgress(null);
         setLoading(false);
@@ -154,10 +154,10 @@ const Home = () => {
       try {
         // get buildings before first render
         const data = await getBuildings();
-        console.log(data);
+        devLog(data);
         setBuildings(data);
       } catch (e) {
-        console.log("error calling api: ", e);
+        devLog("error calling api: ", e);
       }
     })();
   }, []);
@@ -176,12 +176,12 @@ const Home = () => {
           timeInterval: 500,
         },
         (loc) => {
-          // console.log("location updated: ", loc);
+          // devLog("location updated: ", loc);
           setLocation(loc);
         },
       );
       Location.watchHeadingAsync((heading) => {
-        // console.log(heading);
+        // devLog(heading);
         setHeading(heading.trueHeading);
       });
     })();
@@ -210,9 +210,9 @@ const Home = () => {
             location?.coords.longitude,
           );
           setCurrentRoute(data);
-          console.log("route data: ", data);
+          devLog("route data: ", data);
         } catch (e) {
-          console.log("error getting route: ", e);
+          devLog("error getting route: ", e);
         } finally {
           setLoadingProgress(1);
           setLoading(false);
@@ -224,7 +224,6 @@ const Home = () => {
 
   useEffect(() => {
     if (!(onRoute || followUserLocation)) {
-      console.log("resetting camera");
       setTimeout(
         () => cameraRef.current?.setCamera({ ...defaultCameraSettings }),
         0, // ? something behind the scenes in Mapbox doesn't allow for the camera to be set immediately after `followUserPosition` turns `false`
@@ -233,10 +232,11 @@ const Home = () => {
   }, [onRoute, followUserLocation]);
 
   const handleMapPressed = useCallback((feature: GeoJSON.Feature) => {
+    if (__DEV__) return;
     const coords = (
       feature.geometry as unknown as { coordinates: [number, number] }
     ).coordinates; // ? this seems to be a typing mistake from Mapbox, since it does return the forced type
-    console.log(coords);
+    devLog(coords);
     setLocation(
       (prev) =>
         ({
