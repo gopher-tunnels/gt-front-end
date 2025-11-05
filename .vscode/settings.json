@@ -5,5 +5,5 @@
     "ios/Pods/Headers/Private/RCT-Folly/folly/lang",
     "ios/Pods/Headers/Public/RCT-Folly/folly/lang"
   ],
-  "conventionalCommits.scopes": ["eas"]
+  "conventionalCommits.scopes": ["eas", "update"]
 }
