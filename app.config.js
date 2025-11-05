@@ -22,6 +22,9 @@ export default {
       icon: "./assets/GopherTunnels.icon",
       supportsTablet: false,
       bundleIdentifier: "com.adcumn.gophertunnels",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {
@@ -69,9 +72,7 @@ export default {
       router: {
         origin: false,
       },
-      eas: {
-        projectId: "56f6e6cb-c147-432d-bada-b229ac048dd3",
-      },
+      eas: { projectId: "5e2aee69-1344-4ae9-9f15-aa6940ee4a43" },
     },
   },
 };
