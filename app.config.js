@@ -1,12 +1,14 @@
 export default {
   expo: {
     name: "GopherTunnels",
+    description: "Find your way through the GopherWay!",
     slug: "GT",
     // newArchEnabled: false,
-    version: "1.0.0",
+    platforms: ["ios", "android"],
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
-    userInterfaceStyle: "dark",
+    userInterfaceStyle: "automatic",
     splash: {
       image: "./assets/splashLight.png",
       resizeMode: "cover",
@@ -25,6 +27,7 @@ export default {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
+      buildNumber: "1.0.1",
     },
     android: {
       adaptiveIcon: {
@@ -32,6 +35,7 @@ export default {
         backgroundColor: "#ffffff",
       },
       package: "com.adcumn.gophertunnels",
+      versionCode: 101,
     },
     web: {
       favicon: "./assets/adaptive-icon.png",

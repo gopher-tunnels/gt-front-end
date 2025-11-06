@@ -25,8 +25,7 @@ const textEncoder =
   typeof TextEncoder !== "undefined" ? new TextEncoder() : null;
 
 const getSecret = () => {
-  const secret =
-    process.env.API_SHARED_SECRET || process.env.EXPO_PUBLIC_API_SHARED_SECRET;
+  const secret = process.env.EXPO_PUBLIC_API_SHARED_SECRET;
   if (!secret) {
     throw new Error("Missing API_SHARED_SECRET for request signing");
   }
@@ -155,14 +154,10 @@ api.interceptors.request.use(
     headers.set("X-Timestamp", timestamp);
     headers.set("X-Nonce", nonce);
     headers.set("X-Signature", signature);
-    if (
-      process.env.VERCEL_BYPASS_TOKEN ||
-      process.env.EXPO_PUBLIC_VERCEL_BYPASS_TOKEN
-    ) {
+    if (process.env.EXPO_PUBLIC_VERCEL_BYPASS_TOKEN) {
       headers.set(
         "x-vercel-protection-bypass",
-        process.env.VERCEL_BYPASS_TOKEN ||
-          process.env.EXPO_PUBLIC_VERCEL_BYPASS_TOKEN,
+        process.env.EXPO_PUBLIC_VERCEL_BYPASS_TOKEN,
       );
     }
 
