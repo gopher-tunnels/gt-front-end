@@ -5,7 +5,7 @@ export default {
     slug: "GT",
     // newArchEnabled: false,
     platforms: ["ios", "android"],
-    version: "1.0.1",
+    version: "1.0.2",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -27,7 +27,7 @@ export default {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
-      buildNumber: "1.0.1",
+      buildNumber: "1.0.2",
     },
     android: {
       adaptiveIcon: {
@@ -35,7 +35,7 @@ export default {
         backgroundColor: "#ffffff",
       },
       package: "com.adcumn.gophertunnels",
-      versionCode: 101,
+      versionCode: 102,
     },
     web: {
       favicon: "./assets/adaptive-icon.png",
@@ -63,7 +63,7 @@ export default {
           ],
         },
       ],
-      ["@rnmapbox/maps", {}],
+      ["@rnmapbox/maps", { RNMapboxMapsVersion: "11.15.2" }],
       [
         "expo-location",
         {
