@@ -10,7 +10,7 @@ import * as Location from "expo-location";
 import CustomMarker from "../../components/CustomMarker";
 import * as SplashScreen from "expo-splash-screen";
 
-import MapboxGL, { UserTrackingMode } from "@rnmapbox/maps";
+import Mapbox, { UserTrackingMode, type Location as MapboxLocation } from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
 
 import { Container, Content } from "./styles";
@@ -26,11 +26,13 @@ import useNavigationProgress, {
   OffRouteCallbackPayload,
 } from "../../hooks/useNavigationProgress";
 import { mockClosedTimes, mockOpenTimes } from "../../mock/buildings";
+import { useTheme } from "styled-components/native";
+import UserLocationIndicator from "../../components/UserLocationIndicator";
 
 SplashScreen.preventAutoHideAsync();
-MapboxGL.setAccessToken(MAPBOX_ACCESS_TOKEN);
+Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
-const defaultCameraSettings: MapboxGL.CameraStop = {
+const defaultCameraSettings: Mapbox.CameraStop = {
   heading: 0,
   zoomLevel: 15,
   pitch: 0,
@@ -38,8 +40,9 @@ const defaultCameraSettings: MapboxGL.CameraStop = {
 };
 
 const Home = () => {
+  const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const cameraRef = useRef<MapboxGL.Camera | null>(null);
+  const cameraRef = useRef<Mapbox.Camera | null>(null);
   const latestQuery = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isReroutingRef = useRef(false);
   // loading
@@ -54,7 +57,7 @@ const Home = () => {
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null,
   );
-  const [heading, setHeading] = useState<number>(0);
+  const [heading, setHeading] = useState<number | null>(null);
   // page state
   const [onRoute, setOnRoute] = useState<boolean>(false);
   const [followUserLocation, setFollowUserLocation] =
@@ -180,9 +183,13 @@ const Home = () => {
           setLocation(loc);
         },
       );
-      Location.watchHeadingAsync((heading) => {
-        // devLog(heading);
-        setHeading(heading.trueHeading);
+      Location.watchHeadingAsync((headingValue) => {
+        const { trueHeading } = headingValue;
+        setHeading(
+          Number.isFinite(trueHeading) && trueHeading >= 0
+            ? trueHeading
+            : null,
+        );
       });
     })();
   }, []);
@@ -232,7 +239,7 @@ const Home = () => {
   }, [onRoute, followUserLocation]);
 
   const handleMapPressed = useCallback((feature: GeoJSON.Feature) => {
-    if (__DEV__) return;
+    if (!__DEV__) return;
     const coords = (
       feature.geometry as unknown as { coordinates: [number, number] }
     ).coordinates; // ? this seems to be a typing mistake from Mapbox, since it does return the forced type
@@ -249,6 +256,21 @@ const Home = () => {
         }) as Location.LocationObject,
     );
   }, []);
+
+  const isDarkMode = theme.name === "dark";
+  const userLocationCoordinate = location?.coords
+    ? ([location.coords.longitude, location.coords.latitude] as [
+        number,
+        number,
+      ])
+    : null;
+
+  const handleUserLocationUpdate = useCallback(
+    (_location: MapboxLocation) => {
+      // no-op – keeps the internal location manager running even when hidden
+    },
+    [],
+  );
 
   return (
     <Container>
@@ -315,17 +337,17 @@ const Home = () => {
         />
       </Content>
 
-      <MapboxGL.MapView
+      <Mapbox.MapView
         scaleBarEnabled={false}
         onPress={handleMapPressed}
         style={styles.map}
-        styleURL="mapbox://styles/mapbox/standard"
+        styleURL={theme.mapboxStyleURL}
         onCameraChanged={(state) => {
           if (state.gestures.isGestureActive && followUserLocation)
             setFollowUserLocation(false);
         }}
       >
-        <MapboxGL.Camera
+        <Mapbox.Camera
           animationMode={"moveTo"}
           ref={cameraRef}
           defaultSettings={{
@@ -340,10 +362,19 @@ const Home = () => {
           followPitch={45}
           followUserMode={UserTrackingMode.FollowWithHeading}
         />
-        <MapboxGL.UserLocation
-          visible={true}
+        <Mapbox.UserLocation
+          visible={!isDarkMode}
           showsUserHeadingIndicator={onRoute}
+          onUpdate={handleUserLocationUpdate}
         />
+        {isDarkMode && (
+          <UserLocationIndicator
+            coordinate={userLocationCoordinate}
+            heading={heading}
+            showsHeadingIndicator={onRoute}
+            visible={!!userLocationCoordinate}
+          />
+        )}
         {routeSegments.length > 0 && (
           <PathComponent
             id="route-animated"
@@ -352,10 +383,11 @@ const Home = () => {
           />
         )}
         {buildings
-          .filter(
-            (building) =>
-              !onRoute || building.buildingName === destination.buildingName,
-          )
+          .filter((building) => {
+            if (!onRoute) return true;
+            if (!destination) return false;
+            return building.buildingName === destination.buildingName;
+          })
           .map((building, index) => (
             <CustomMarker
               coordinate={[building.longitude, building.latitude]}
@@ -372,7 +404,7 @@ const Home = () => {
               }}
             />
           ))}
-      </MapboxGL.MapView>
+      </Mapbox.MapView>
     </Container>
   );
 };

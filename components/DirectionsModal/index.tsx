@@ -286,6 +286,7 @@ const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
                 {...props}
                 key={props.label}
                 style={{ flexGrow: 1 }}
+                interactive={false}
               />
             ))}
           </LegendContainer>
@@ -311,9 +312,13 @@ const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
           <HeadingContainer>
             <StyledText variant="header">{destinationInfo.name}</StyledText>
             <IconTextContainer>
-              <MaterialIcons name="directions-walk" size={16} />
+              <MaterialIcons
+                name="directions-walk"
+                size={16}
+                color={theme.colors.contrast}
+              />
               <Skeleton
-                colorMode="light"
+                colorMode={theme.name === "dark" ? "dark" : "light"}
                 show={loading || (eta == null && eta == undefined)}
               >
                 <StyledText>
@@ -326,13 +331,13 @@ const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
           </HeadingContainer>
           <IconTextContainer>
             {Clock}
-            <StyledText style={{ color: isOpen ? "green" : "red" }}>
+            <StyledText color={isOpen ? "success" : "error"}>
               {isOpen ? "Open" : "Closed"} now
             </StyledText>
-            <StyledText style={{ color: "gray" }}>
+            <StyledText color="gray1">
               ⋅ {isOpen ? "Closes" : "Opens"} at{" "}
               {isOpen
-                ? dayjs(destinationInfo?.closes?.[dayjs().day() + 1]).format(
+                ? dayjs(destinationInfo?.closes?.[dayjs().day()]).format(
                     "h:mmA",
                   )
                 : (nextOpeningText ??
@@ -383,7 +388,7 @@ const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
             </View>
             <IconTextContainer>
               <StyledText
-                style={{ color: "green" }}
+                color="success"
                 numberOfLines={1}
                 ellipsizeMode="clip"
               >

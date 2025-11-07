@@ -1,13 +1,14 @@
 import React, { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, useColorScheme } from "react-native";
 import Home from "./app/Home";
 import { ThemeProvider } from "styled-components/native";
-import lightTheme from "./styles/themes/light";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import fontObject from "./assets/fonts";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import lightTheme from "./styles/themes/light";
+import darkTheme from "./styles/themes/dark";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +20,8 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fontObject);
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === "dark" ? darkTheme : lightTheme;
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -31,11 +34,16 @@ export default function App() {
   }
 
   return (
-    // TODO: set up theme switching
     <SafeAreaProvider>
       <GestureHandlerRootView style={styles.gestureRoot}>
-        <ThemeProvider theme={lightTheme}>
-          <View style={styles.container} onLayout={onLayoutRootView}>
+        <ThemeProvider theme={theme}>
+          <View
+            style={[
+              styles.container,
+              { backgroundColor: theme.colors.neutral },
+            ]}
+            onLayout={onLayoutRootView}
+          >
             <Home />
           </View>
         </ThemeProvider>

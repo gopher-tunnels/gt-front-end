@@ -5,7 +5,7 @@ export default {
     slug: "GT",
     // newArchEnabled: false,
     platforms: ["ios", "android"],
-    version: "1.0.2",
+    version: "1.0.3",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -27,7 +27,7 @@ export default {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
-      buildNumber: "1.0.2",
+      buildNumber: "1.0.3",
     },
     android: {
       adaptiveIcon: {
@@ -35,7 +35,7 @@ export default {
         backgroundColor: "#ffffff",
       },
       package: "com.adcumn.gophertunnels",
-      versionCode: 102,
+      versionCode: 103,
     },
     web: {
       favicon: "./assets/adaptive-icon.png",

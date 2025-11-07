@@ -1,13 +1,14 @@
 import styled, { css } from "styled-components/native";
 import { ComponentProps } from "react";
 import CustomChip from ".";
+import { MotiPressable } from "moti/interactions";
 
 interface CommonProps {
   type: ComponentProps<typeof CustomChip>["type"];
 }
 
-export const Container = styled.TouchableOpacity<CommonProps>`
-  padding: 6px 12px;
+export const Container = styled(MotiPressable)<CommonProps>`
+  padding: 6px 14.79px;
   background-color: ${({ theme }) => theme.colors.neutral};
   border-radius: 100px;
   border: 1px solid ${({ theme }) => theme.colors.primary3};
@@ -21,8 +22,8 @@ export const Container = styled.TouchableOpacity<CommonProps>`
   ${(props) =>
     props.type !== "default" &&
     css`
-      background-color: ${({ theme }) => theme.colors[`${props.type}1`]};
-      border-color: ${({ theme }) => theme.colors[`${props.type}1`]};
+      background-color: ${({ theme }) => theme.colors[`${props.type}2`]}20;
+      border-color: ${({ theme }) => theme.colors[`${props.type}1`]}10;
     `}
 `;
 

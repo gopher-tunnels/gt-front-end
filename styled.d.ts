@@ -17,7 +17,6 @@ export interface CustomTheme {
     primary7: string;
     primary8: string;
     primary9: string;
-    primaryDarkest: string;
 
     secondary1: string;
     secondary2: string;
@@ -28,11 +27,13 @@ export interface CustomTheme {
     secondary7: string;
     secondary8: string;
     secondary9: string;
-    secondaryDarkest: string;
 
     contrast: string;
 
     neutral: string;
+    success: string;
+    error: string;
+    info: string;
 
     tunnel1: string;
     tunnel2: string;

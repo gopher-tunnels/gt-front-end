@@ -1,6 +1,7 @@
+import { MotiPressable } from "moti/interactions";
 import styled from "styled-components/native";
 
-export const Container = styled.Pressable`
+export const Container = styled(MotiPressable)`
   background-color: ${({ theme }) => theme.colors.neutral};
   border-radius: 10px;
   aspect-ratio: 1;

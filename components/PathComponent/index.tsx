@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import MapboxGL from "@rnmapbox/maps";
 import { useTheme } from "styled-components/native";
 import { projectOntoPolyline } from "../../utils/navigation";
@@ -264,10 +270,7 @@ const PathComponent: React.FC<PathComponentProps> = ({
     }
 
     const routeLength = normalized.totalLength;
-    const clampedStart = Math.max(
-      0,
-      Math.min(projectedDistance, routeLength),
-    );
+    const clampedStart = Math.max(0, Math.min(projectedDistance, routeLength));
     const remainingLength = Math.max(0, routeLength - clampedStart);
     const wasLength = prevTotalLengthRef.current;
     const isNewRoute =
@@ -364,6 +367,7 @@ const PathComponent: React.FC<PathComponentProps> = ({
           lineJoin: "round",
           lineColor: ["get", "color"],
           lineWidth: lineWidth,
+          lineEmissiveStrength: 1.0,
         }}
       />
     </MapboxGL.ShapeSource>

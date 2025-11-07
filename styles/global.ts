@@ -1,4 +1,8 @@
 import styled from "styled-components/native";
+import { CustomTheme } from "../styled";
+import { TextProps } from "react-native";
+import { useMemo } from "react";
+import { MotiPressableProps } from "moti/interactions";
 
 // * StyledText >>>>>>
 const weightMap = {
@@ -24,13 +28,16 @@ interface StyledTextProps {
   variant?: keyof typeof variantMap;
   weight?: keyof typeof weightMap | (typeof weightMap)[keyof typeof weightMap];
   italic?: boolean;
+  color?: keyof CustomTheme["colors"];
 }
 
-export const StyledText = styled.Text<StyledTextProps>`
-  font-family: PlusJakartaSans-${({ variant, weight, italic }) => `${(weightMap as Record<any, string>)[weight ?? variantMap[variant as keyof typeof variantMap]?.weight ?? 500] ?? weight}${italic ? "Italic" : ""}`};
-  font-size: ${({ variant }) => variantMap[variant ?? "normal"].size}px;
-  color: ${({ theme }) => theme.colors.contrast};
-`;
+export const StyledText: React.FC<TextProps & StyledTextProps> =
+  styled.Text<StyledTextProps>`
+    font-family: PlusJakartaSans-${({ variant, weight, italic }) =>
+        `${(weightMap as Record<any, string>)[weight ?? variantMap[variant as keyof typeof variantMap]?.weight ?? 500] ?? weight}${italic ? "Italic" : ""}`};
+    font-size: ${({ variant }) => variantMap[variant ?? "normal"].size}px;
+    color: ${({ theme, color }) => theme.colors[color || "contrast"]};
+  `;
 // * StyledText <<<<<<
 
 export const BottomSheetHandle = styled.View`
@@ -41,3 +48,14 @@ export const BottomSheetHandle = styled.View`
   border-radius: 8px;
   margin-vertical: 8px;
 `;
+
+export const defaultMotiPressableProps: MotiPressableProps = {
+  transition: { type: "spring", stiffness: 1000, mass: 1 },
+  animate: ({ hovered, pressed }) => {
+    "worklet";
+
+    return {
+      transform: [{ scale: hovered ? 1.1 : pressed ? 0.9 : 1 }],
+    };
+  },
+};

@@ -1,10 +1,12 @@
 import React from "react";
-import { TouchableOpacityProps } from "react-native";
 import { Container, ChipText, Circle } from "./styles";
+import { MotiPressableProps } from "moti/interactions";
+import { defaultMotiPressableProps } from "../../styles/global";
 
-interface CustomChipProps extends TouchableOpacityProps {
+interface CustomChipProps extends MotiPressableProps {
   label: string;
   type?: "default" | "tunnel" | "skyway" | "sidewalk";
+  interactive?: boolean;
 }
 
 /**
@@ -12,7 +14,7 @@ interface CustomChipProps extends TouchableOpacityProps {
  *
  * @param {string} label - The label that appears on the chip
  * @param {"default" | "tunnel" | "skyway" | "sidewalk"} type - Types that have different styles / colors for the chip, must be "default", "tunnel", "skyway", "sidewalk" or undefined
- * 
+ *
  * @returns {React.FC<CustomChipProps>} TSX React Functional Component
  *
  * @example
@@ -21,10 +23,18 @@ interface CustomChipProps extends TouchableOpacityProps {
  * ```
  */
 
-const CustomChip: React.FC<CustomChipProps> = (props: CustomChipProps) => {
-  const { label, type = "default", ...touchableOpacityProps } = props;
+const CustomChip: React.FC<CustomChipProps> = ({
+  label,
+  type = "default",
+  interactive = true,
+  ...motiPressableProps
+}) => {
   return (
-    <Container type={type} {...touchableOpacityProps}>
+    <Container
+      type={type}
+      {...(interactive ? defaultMotiPressableProps : {})}
+      {...motiPressableProps}
+    >
       {type !== "default" && <Circle type={type} />}
       <ChipText type={type}>{label}</ChipText>
     </Container>
