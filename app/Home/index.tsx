@@ -9,10 +9,12 @@ import { StyleSheet } from "react-native";
 import * as Location from "expo-location";
 import CustomMarker from "../../components/CustomMarker";
 import * as SplashScreen from "expo-splash-screen";
+import { getDistance } from 'geolib';
 
 import Mapbox, { UserTrackingMode, type Location as MapboxLocation } from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
 
+import WarningCard from "../../components/WarningCard";
 import { Container, Content } from "./styles";
 import SearchBar from "../../components/Searchbar";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -32,11 +34,15 @@ import UserLocationIndicator from "../../components/UserLocationIndicator";
 SplashScreen.preventAutoHideAsync();
 Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
 
+const centerEastBank = [-93.23532984426897, 44.974795560478185];
+const centerWestBank = [-93.24362646592533, 44.971433055945454];
+const centerSaintPaul = [-93.18348970377424, 44.98500021512913];
+
 const defaultCameraSettings: Mapbox.CameraStop = {
   heading: 0,
   zoomLevel: 15,
   pitch: 0,
-  centerCoordinate: [-93.23532984426897, 44.974795560478185], // centers on campus if no location
+  centerCoordinate: centerEastBank, // centers on campus if no location
 };
 
 const Home = () => {
@@ -65,6 +71,8 @@ const Home = () => {
   const [destination, setDestination] = useState<
     (typeof buildings)[number] | null
   >(null);
+  const [isTooFar, setIsTooFar] = useState<boolean>(false);
+  const [showWarning, setShowWarning] = useState<boolean>(true);
 
   // memoized functions
   /**
@@ -194,6 +202,28 @@ const Home = () => {
     })();
   }, []);
 
+
+  // checks if user is too far from campus to use app properly
+  useEffect(() => {
+    if (!location?.coords) return;
+    
+    const eastDistanceInMeters = getDistance(
+      { latitude: location.coords.latitude, longitude: location.coords.longitude },
+      { latitude: centerEastBank[1], longitude: centerEastBank[0] }
+    );
+    const stPaulDistanceInMeters = getDistance(
+      { latitude: location.coords.latitude, longitude: location.coords.longitude },
+      { latitude: centerSaintPaul[1], longitude: centerSaintPaul[0] }
+    );
+    const westDistanceInMeters = getDistance(
+      { latitude: location.coords.latitude, longitude: location.coords.longitude },
+      { latitude: centerWestBank[1], longitude: centerWestBank[0] }
+    );
+    
+    setIsTooFar(eastDistanceInMeters > 1600 && stPaulDistanceInMeters > 1300 && westDistanceInMeters > 1000);
+  }, [location]);
+
+
   useEffect(() => {
     if (!location?.coords) return;
     setLoadingProgress(null);
@@ -274,6 +304,8 @@ const Home = () => {
 
   return (
     <Container>
+      {isTooFar && showWarning && 
+      <WarningCard setShowWarning={setShowWarning}/>}
       <Content
         pointerEvents="box-none"
         style={{ paddingTop: insets.top + 5, paddingBottom: insets.bottom }}
