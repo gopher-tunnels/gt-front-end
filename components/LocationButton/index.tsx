@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import UserButton from '../../assets/userButton.svg';
+import UserButton from '../../assets/images/userButton.svg';
 
 export interface Props {
     width: number;

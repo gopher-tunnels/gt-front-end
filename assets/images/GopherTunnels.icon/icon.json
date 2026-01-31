@@ -29,16 +29,13 @@
       "hidden" : false,
       "layers" : [
         {
-          "blend-mode" : "normal",
-          "glass" : true,
-          "hidden" : false,
           "image-name" : "Gopher.svg",
           "name" : "Gopher",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
-              0,
-              -117
+              3.0999348155091866e-07,
+              -116.09948868192862
             ]
           }
         }
@@ -96,13 +93,14 @@
       ],
       "layers" : [
         {
-          "image-name" : "Tunnel.svg",
-          "name" : "Tunnel",
+          "hidden" : false,
+          "image-name" : "tunnel.svg",
+          "name" : "tunnel",
           "position" : {
             "scale" : 1,
             "translation-in-points" : [
-              0,
-              56
+              3.0999348155091866e-07,
+              63.01757239263782
             ]
           }
         }
@@ -134,7 +132,7 @@
         {
           "value" : {
             "enabled" : true,
-            "value" : 0.75
+            "value" : 0.9
           }
         },
         {
@@ -145,6 +143,32 @@
           }
         }
       ]
+    },
+    {
+      "blur-material" : null,
+      "layers" : [
+        {
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "bg.svg",
+          "name" : "bg",
+          "position" : {
+            "scale" : 1.63,
+            "translation-in-points" : [
+              0,
+              -59
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.1
+      }
     },
     {
       "blur-material-specializations" : [
@@ -164,11 +188,12 @@
             "scale" : 1,
             "translation-in-points" : [
               0,
-              0
+              15.998547198770268
             ]
           }
         }
       ],
+      "lighting" : "individual",
       "name" : "Group",
       "position" : {
         "scale" : 1.63,
