@@ -1,4 +1,4 @@
-import React, { ComponentProps, useEffect, useRef, useState } from "react";
+import React, { ComponentProps, useRef, useState } from "react";
 import { ScrollView, TextInput } from "react-native";
 import { Bar, Container, SearchInput, SearchResultContainer } from "./styles";
 import { useTheme } from "styled-components/native";
@@ -10,7 +10,8 @@ import Animated, {
   SlideInUp,
   SlideOutUp,
 } from "react-native-reanimated";
-import { getPopular, getSearchResults } from "../../services/api";
+import { toast } from "sonner-native";
+import { getSearchResults } from "../../services/api";
 import { GetPopularResponse, GetSearchResponse } from "../../@types/api";
 import { devLog } from "../../utils/functions";
 
@@ -22,7 +23,12 @@ interface SearchbarProps extends ComponentProps<typeof SearchInput> {
   onSelectDestination: (
     dest: BuildingInfo | GetPopularResponse[number],
   ) => void;
+  popularDestinations?: GetPopularResponse;
 }
+
+const TOAST_IDS = {
+  search: "search-error",
+} as const;
 
 /**
  * @description A styled search bar with text input
@@ -44,28 +50,16 @@ interface SearchbarProps extends ComponentProps<typeof SearchInput> {
 
 const Searchbar: React.FC<SearchbarProps> = ({
   onSelectDestination,
+  popularDestinations = [],
   ...props
 }) => {
   const theme = useTheme();
   const [inputText, setInputText] = React.useState("");
   const [buildingResults, setBuildingResults] = useState<GetSearchResponse>([]);
-  const [popularDestinations, setPopularDestinations] =
-    useState<GetPopularResponse>([]);
   const inputRef = useRef<TextInput | null>(null);
 
   const showResults =
     inputRef.current?.isFocused() && buildingResults.length > 0 && inputText;
-
-  useEffect(() => {
-    (async () => {
-      try {
-        devLog("popular destinations: ", await getPopular());
-        setPopularDestinations(await getPopular());
-      } catch (e) {
-        devLog("error getting popular routes: ", e);
-      }
-    })();
-  }, []);
 
   return (
     <AnimatedContainer
@@ -97,9 +91,22 @@ const Searchbar: React.FC<SearchbarProps> = ({
           value={inputText}
           onChangeText={async (newVal) => {
             setInputText(newVal);
-            // TODO: modify search logic
-            if (newVal)
-              setBuildingResults(await getSearchResults(newVal.toLowerCase()));
+            const trimmed = newVal.trim();
+            if (!trimmed) {
+              setBuildingResults([]);
+              return;
+            }
+            try {
+              const results = await getSearchResults(trimmed.toLowerCase());
+              setBuildingResults(results);
+              toast.dismiss(TOAST_IDS.search);
+            } catch (e) {
+              devLog("error getting search results: ", e);
+              toast.error("Search failed", {
+                id: TOAST_IDS.search,
+                description: "Check your connection and try again.",
+              });
+            }
           }}
           {...props}
           ref={inputRef}

@@ -4,14 +4,20 @@ import React, {
   useRef,
   useCallback,
   useLayoutEffect,
+  useContext,
 } from "react";
 import { StyleSheet } from "react-native";
 import * as Location from "expo-location";
 import CustomMarker from "../../components/CustomMarker";
 import * as SplashScreen from "expo-splash-screen";
 
-import Mapbox, { UserTrackingMode, type Location as MapboxLocation } from "@rnmapbox/maps";
+import Mapbox, {
+  UserTrackingMode,
+  type Location as MapboxLocation,
+} from "@rnmapbox/maps";
 import { MAPBOX_ACCESS_TOKEN } from "../../mapboxConfig";
+import { toast } from "sonner-native";
+import NetInfo, { type NetInfoState } from "@react-native-community/netinfo";
 
 import { Container, Content } from "./styles";
 import SearchBar from "../../components/Searchbar";
@@ -19,15 +25,22 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DirectionsHeader from "../../components/DirectionsHeader";
 import BottomControls from "../../components/BottomControls";
 import { devLog, getBoundingBox, metersToMiles } from "../../utils/functions";
-import { getBuildings, getRoute } from "../../services/api";
+import { getBuildings, getPopular, getRoute } from "../../services/api";
 import PathComponent from "../../components/PathComponent";
-import { GetBuildingsResponse, GetRouteResponse } from "../../@types/api";
+import { retry } from "../../utils/retry";
+import {
+  GetBuildingsResponse,
+  GetPopularResponse,
+  GetRouteResponse,
+} from "../../@types/api";
 import useNavigationProgress, {
   OffRouteCallbackPayload,
 } from "../../hooks/useNavigationProgress";
 import { mockClosedTimes, mockOpenTimes } from "../../mock/buildings";
 import { useTheme } from "styled-components/native";
 import UserLocationIndicator from "../../components/UserLocationIndicator";
+import Banner from "../../components/Banner";
+import { Context } from "../../App";
 
 SplashScreen.preventAutoHideAsync();
 Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -39,12 +52,24 @@ const defaultCameraSettings: Mapbox.CameraStop = {
   centerCoordinate: [-93.23532984426897, 44.974795560478185], // centers on campus if no location
 };
 
+const TOAST_IDS = {
+  buildings: "buildings-error",
+  route: "route-error",
+  reroute: "reroute-error",
+  locationPermission: "location-permission",
+} as const;
+
 const Home = () => {
+  const { hideSplash } = useContext(Context);
+  const [offline, setOffline] = useState(false);
+  const [setupFailed, setSetupFailed] = useState(false);
+  const [retries, setRetries] = useState(0);
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const latestQuery = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isReroutingRef = useRef(false);
+  const destinationRef = useRef<number | string | null>(null);
   // loading
   const [loading, setLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState<number | null>(null);
@@ -58,13 +83,23 @@ const Home = () => {
     null,
   );
   const [heading, setHeading] = useState<number | null>(null);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<
+    number | string | null
+  >(null);
   // page state
   const [onRoute, setOnRoute] = useState<boolean>(false);
+  const [centered, setCentered] = useState<boolean>(true);
   const [followUserLocation, setFollowUserLocation] =
     useState<boolean>(onRoute);
   const [destination, setDestination] = useState<
     (typeof buildings)[number] | null
   >(null);
+  const [popularDestinations, setPopularDestinations] =
+    useState<GetPopularResponse>([]);
+
+  useEffect(() => {
+    destinationRef.current = destination?.id ?? null;
+  }, [destination]);
 
   // memoized functions
   /**
@@ -114,6 +149,17 @@ const Home = () => {
     [setLoadingProgress],
   );
 
+  const clearRouteData = useCallback(() => {
+    if (latestQuery.current) {
+      clearTimeout(latestQuery.current);
+      latestQuery.current = null;
+    }
+    setCurrentRoute(null);
+    setLoading(false);
+    setLoadingProgress(null);
+    setOnRoute(false);
+  }, []);
+
   const handleOffRoute = useCallback(
     async ({ location: offRouteLocation }: OffRouteCallbackPayload) => {
       if (!destination) return;
@@ -133,8 +179,13 @@ const Home = () => {
           offRouteLocation.coords.longitude,
         );
         setCurrentRoute(data);
+        toast.dismiss(TOAST_IDS.reroute);
       } catch (e) {
         devLog("error re-routing: ", e);
+        toast.warning("Rerouting failed", {
+          id: TOAST_IDS.reroute,
+          description: "We'll keep your last directions for now.",
+        });
       } finally {
         setLoadingProgress(null);
         setLoading(false);
@@ -152,52 +203,107 @@ const Home = () => {
   );
   const routeSegments = navigation.normalizedRoute?.segments ?? [];
 
-  useLayoutEffect(() => {
-    (async () => {
-      try {
-        // get buildings before first render
-        const data = await getBuildings();
-        devLog(data);
-        setBuildings(data);
-      } catch (e) {
-        devLog("error calling api: ", e);
-      }
-    })();
+  const setup = async () => {
+    if (buildings?.length && popularDestinations?.length) return;
+    try {
+      // get buildings and popular destinations before first render
+      const [buildingsData, popular] = await Promise.all([
+        retry(() => getBuildings(), 3, 800),
+        retry(() => getPopular(), 3, 800),
+      ]);
+      // devLog(buildingsData);
+      setBuildings(buildingsData);
+      setPopularDestinations(popular);
+      setSetupFailed(false);
+    } catch (e) {
+      setRetries((prev) => prev + 1);
+      setSetupFailed(true);
+      devLog("error calling api: ", e);
+      // toast.error("Couldn't load buildings", {
+      //   id: TOAST_IDS.buildings,
+      //   description: "Check your connection and try again.",
+      // });
+    } finally {
+      hideSplash();
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const handleNetInfoUpdate = (state: NetInfoState) => {
+      // devLog("network state updated:", state);
+      setOffline((prevOffline) => {
+        if (state.isInternetReachable === false || state.isConnected === false)
+          return true;
+        if (state.isInternetReachable === true || state.isConnected === true)
+          return false;
+        return prevOffline;
+      });
+    };
+
+    setup();
+
+    NetInfo.fetch()
+      .then((state) => {
+        if (isMounted) handleNetInfoUpdate(state);
+      })
+      .catch((error) => devLog("netinfo fetch failed:", error));
+
+    const unsubscribe = NetInfo.addEventListener(handleNetInfoUpdate);
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.warn("Permission to access location was denied");
-        return;
-      }
-      Location.watchPositionAsync(
-        {
-          accuracy: Location.LocationAccuracy.BestForNavigation,
-          distanceInterval: 1,
-          timeInterval: 500,
-        },
-        (loc) => {
-          // devLog("location updated: ", loc);
-          setLocation(loc);
-        },
-      );
-      Location.watchHeadingAsync((headingValue) => {
-        const { trueHeading } = headingValue;
-        setHeading(
-          Number.isFinite(trueHeading) && trueHeading >= 0
-            ? trueHeading
-            : null,
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          toast.error("Location permission denied", {
+            id: TOAST_IDS.locationPermission,
+            description: "Enable location to get navigation directions.",
+          });
+          return;
+        }
+        Location.watchPositionAsync(
+          {
+            accuracy: Location.LocationAccuracy.BestForNavigation,
+            distanceInterval: 1,
+            timeInterval: 500,
+          },
+          (loc) => {
+            // devLog("location updated: ", loc);
+            setLocation(loc);
+          },
         );
-      });
+        Location.watchHeadingAsync((headingValue) => {
+          const { trueHeading } = headingValue;
+          setHeading(
+            Number.isFinite(trueHeading) && trueHeading >= 0
+              ? trueHeading
+              : null,
+          );
+        });
+      } catch (e) {
+        devLog("error requesting location permissions: ", e);
+        toast.error("Unable to access location", {
+          id: TOAST_IDS.locationPermission,
+          description: "Please try again or check location services.",
+        });
+      }
     })();
   }, []);
 
   useEffect(() => {
     if (!location?.coords) return;
     setLoadingProgress(null);
-    if (latestQuery.current) clearTimeout(latestQuery.current);
+    if (latestQuery.current) {
+      clearTimeout(latestQuery.current);
+      latestQuery.current = null;
+    }
     if (!destination) {
       cameraRef.current?.setCamera({
         heading: 0,
@@ -207,25 +313,43 @@ const Home = () => {
       setCurrentRoute(null);
       return;
     } else {
+      const targetDestination = destination;
+      const targetDestinationId = destination.id;
       setLoading(true);
       simulateLoadingProgress(0.5, 0.95);
-      latestQuery.current = setTimeout(async () => {
+      const timeoutId = setTimeout(async () => {
         try {
           const data = await getRoute(
-            destination.buildingName,
+            targetDestination.buildingName,
             location?.coords.latitude,
             location?.coords.longitude,
           );
+          if (destinationRef.current !== targetDestinationId) return;
           setCurrentRoute(data);
-          devLog("route data: ", data);
+          toast.dismiss(TOAST_IDS.route);
+          // devLog("route data: ", data);
         } catch (e) {
+          if (destinationRef.current !== targetDestinationId) return;
           devLog("error getting route: ", e);
+          toast.error("Couldn't load route", {
+            id: TOAST_IDS.route,
+            description: "Please check your connection and try again.",
+          });
         } finally {
+          if (destinationRef.current !== targetDestinationId) return;
           setLoadingProgress(1);
           setLoading(false);
           setLoadingProgress(null);
+          if (latestQuery.current === timeoutId) latestQuery.current = null;
         }
       }, 500);
+      latestQuery.current = timeoutId;
+      return () => {
+        if (latestQuery.current === timeoutId) {
+          clearTimeout(timeoutId);
+          latestQuery.current = null;
+        }
+      };
     }
   }, [destination]);
 
@@ -238,24 +362,59 @@ const Home = () => {
     }
   }, [onRoute, followUserLocation]);
 
-  const handleMapPressed = useCallback((feature: GeoJSON.Feature) => {
-    if (!__DEV__) return;
-    const coords = (
-      feature.geometry as unknown as { coordinates: [number, number] }
-    ).coordinates; // ? this seems to be a typing mistake from Mapbox, since it does return the forced type
-    devLog(coords);
-    setLocation(
-      (prev) =>
-        ({
-          ...prev,
-          coords: {
-            ...prev?.coords,
-            longitude: coords[0],
-            latitude: coords[1],
-          },
-        }) as Location.LocationObject,
-    );
-  }, []);
+  const handleMapPressed = useCallback(
+    (feature: GeoJSON.Feature) => {
+      if (selectedMarkerId) {
+        if (!onRoute) {
+          setDestination(null);
+          setCurrentRoute(null);
+        }
+        setSelectedMarkerId(null);
+      }
+      if (!__DEV__) return;
+      const coords = (
+        feature.geometry as unknown as { coordinates: [number, number] }
+      ).coordinates; // ? this seems to be a typing mistake from Mapbox, since it does return the forced type
+      devLog(coords);
+      setLocation(
+        (prev) =>
+          ({
+            ...prev,
+            coords: {
+              ...prev?.coords,
+              longitude: coords[0],
+              latitude: coords[1],
+            },
+          }) as Location.LocationObject,
+      );
+    },
+    [onRoute, selectedMarkerId],
+  );
+
+  const handleMarkerSelected = useCallback(
+    (building: (typeof buildings)[number] | null) => {
+      if (building === null) {
+        clearRouteData();
+        setDestination(null);
+        setSelectedMarkerId(null);
+        return;
+      }
+
+      const isAlreadySelected = destination?.id === building.id;
+
+      if (isAlreadySelected) {
+        clearRouteData();
+        setDestination(null);
+        setSelectedMarkerId(null);
+        return;
+      }
+
+      clearRouteData();
+      setSelectedMarkerId(building.id);
+      adjustMapToRoute(building);
+    },
+    [adjustMapToRoute, clearRouteData, destination],
+  );
 
   const isDarkMode = theme.name === "dark";
   const userLocationCoordinate = location?.coords
@@ -265,15 +424,29 @@ const Home = () => {
       ])
     : null;
 
-  const handleUserLocationUpdate = useCallback(
-    (_location: MapboxLocation) => {
-      // no-op – keeps the internal location manager running even when hidden
-    },
-    [],
-  );
+  const handleUserLocationUpdate = useCallback((_location: MapboxLocation) => {
+    // no-op – keeps the internal location manager running even when hidden
+  }, []);
 
   return (
     <Container>
+      {!offline && setupFailed && (
+        <Banner
+          key="setup-failed-banner"
+          title="We couldn't load required data"
+          description="Please check your connection and try again."
+          onPressButton={setup}
+          retries={retries}
+        />
+      )}
+      {offline && (
+        <Banner
+          key="offline-banner"
+          title="You are currently offline"
+          description="Routes are unavailable while offline."
+          noButton
+        />
+      )}
       <Content
         pointerEvents="box-none"
         style={{ paddingTop: insets.top + 5, paddingBottom: insets.bottom }}
@@ -286,23 +459,35 @@ const Home = () => {
           />
         ) : (
           <SearchBar
+            popularDestinations={popularDestinations}
             onSelectDestination={(destination) => {
-              setDestination(buildings.find((x) => x.id === destination.id)!);
+              const nextDestination = buildings.find(
+                (x) => x.id === destination.id,
+              );
+              if (!nextDestination) return;
+              clearRouteData();
+              setSelectedMarkerId(nextDestination.id);
+              adjustMapToRoute(nextDestination);
             }}
           />
         )}
         <BottomControls
           active={!!destination}
           onCenter={() => {
-            if (!onRoute && location?.coords)
-              cameraRef.current?.moveTo(
-                [location?.coords.longitude, location?.coords.latitude],
-                500,
-              );
-            else if (onRoute && !followUserLocation)
+            if (!onRoute && location?.coords) {
+              cameraRef.current?.setCamera({
+                centerCoordinate: [
+                  location?.coords.longitude,
+                  location?.coords.latitude,
+                ],
+                zoomLevel: 17,
+                animationDuration: 500,
+              });
+              setCentered(true);
+            } else if (onRoute && !followUserLocation)
               setFollowUserLocation(true);
           }}
-          centerButtonActive={onRoute && followUserLocation}
+          centerButtonActive={onRoute ? followUserLocation : centered}
           loading={loading}
           loadingProgress={loadingProgress || undefined}
           destinationInfo={{
@@ -338,13 +523,17 @@ const Home = () => {
       </Content>
 
       <Mapbox.MapView
+        attributionEnabled
+        attributionPosition={{ left: -3, bottom: 6 }}
         scaleBarEnabled={false}
         onPress={handleMapPressed}
         style={styles.map}
         styleURL={theme.mapboxStyleURL}
         onCameraChanged={(state) => {
-          if (state.gestures.isGestureActive && followUserLocation)
-            setFollowUserLocation(false);
+          if (state.gestures.isGestureActive) {
+            if (followUserLocation) setFollowUserLocation(false);
+            if (centered) setCentered(false);
+          }
         }}
       >
         <Mapbox.Camera
@@ -382,28 +571,16 @@ const Home = () => {
             userLocation={location?.coords ?? null}
           />
         )}
-        {buildings
-          .filter((building) => {
-            if (!onRoute) return true;
-            if (!destination) return false;
-            return building.buildingName === destination.buildingName;
-          })
-          .map((building, index) => (
-            <CustomMarker
-              coordinate={[building.longitude, building.latitude]}
-              id={building.buildingName}
-              key={building.buildingName + index}
-              onSelected={() => {
-                if (!onRoute) adjustMapToRoute(building);
-              }}
-              onDeselected={() => {
-                if (!onRoute) {
-                  setDestination(null);
-                  setCurrentRoute(null);
-                }
-              }}
-            />
-          ))}
+        {buildings.map((building, index) => (
+          <CustomMarker
+            selected={building.id === destination?.id}
+            coordinate={[building.longitude, building.latitude]}
+            id={String(building.id)}
+            key={building.id + index}
+            delay={index * 10}
+            onSelected={() => {if (!onRoute) handleMarkerSelected(building)}}
+          />
+        ))}
       </Mapbox.MapView>
     </Container>
   );

@@ -7,6 +7,7 @@ const lightTheme = {
     medium: 24,
   },
   colors: {
+    splash: "#812228",
     primary1: "#f2e6e8",
     primary2: "#dfc2c8",
     primary3: "#c6919c",

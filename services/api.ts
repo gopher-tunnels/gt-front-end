@@ -91,19 +91,28 @@ const normalizePathWithQuery = (pathWithQuery: string): string => {
 
   if (!queryString) return pathname;
 
+  const safeDecode = (value: string) => {
+    try {
+      return decodeURIComponent(value);
+    } catch {
+      return value;
+    }
+  };
+
+  const normalizeQueryComponent = (value: string) =>
+    encodeURIComponent(safeDecode(value.replace(/\+/g, " ")));
+
   const normalizedParts = queryString
     .split("&")
     .filter(Boolean)
     .map((part) => {
       const equalsIndex = part.indexOf("=");
       if (equalsIndex === -1) {
-        return encodeURIComponent(part.replace(/\+/g, " "));
+        return normalizeQueryComponent(part);
       }
       const key = part.slice(0, equalsIndex);
       const value = part.slice(equalsIndex + 1);
-      return `${encodeURIComponent(key.replace(/\+/g, " "))}=${encodeURIComponent(
-        value.replace(/\+/g, " "),
-      )}`;
+      return `${normalizeQueryComponent(key)}=${normalizeQueryComponent(value)}`;
     });
 
   return normalizedParts.length

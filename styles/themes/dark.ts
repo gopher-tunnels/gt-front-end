@@ -7,6 +7,7 @@ const darkTheme = {
     medium: 24,
   },
   colors: {
+    splash: "#37000B",
     secondary1: "#3c000b",
     secondary2: "#4c000f",
     secondary3: "#5c0013",

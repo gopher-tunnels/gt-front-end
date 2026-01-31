@@ -6,7 +6,7 @@ import {
   BuildingName,
   BuildingAddress,
 } from "./styles";
-import house from "../../../assets/m-house.png";
+import house from "../../../assets/images/m-house.png";
 import { GetSearchResponse } from "../../../@types/api";
 
 interface SearchResultProps extends ComponentProps<typeof Container> {

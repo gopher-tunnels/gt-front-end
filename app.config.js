@@ -7,21 +7,21 @@ export default {
     platforms: ["ios", "android"],
     version: "1.0.3",
     orientation: "portrait",
-    icon: "./assets/icon.png",
+    icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",
     splash: {
-      image: "./assets/splashLight.png",
+      image: "./assets/images/splashLight.png",
       resizeMode: "cover",
       backgroundColor: "#812228",
       dark: {
-        image: "./assets/splashDark.png",
+        image: "./assets/images/splashDark.png",
         resizeMode: "cover",
         backgroundColor: "#37000B",
       },
     },
     assetBundlePatterns: ["**/*"],
     ios: {
-      icon: "./assets/GopherTunnels.icon",
+      icon: "./assets/images/GopherTunnels.icon",
       supportsTablet: false,
       bundleIdentifier: "com.adcumn.gophertunnels",
       infoPlist: {
@@ -31,14 +31,14 @@ export default {
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./assets/images/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
       package: "com.adcumn.gophertunnels",
       versionCode: 103,
     },
     web: {
-      favicon: "./assets/adaptive-icon.png",
+      favicon: "./assets/images/adaptive-icon.png",
     },
     plugins: [
       "expo-router",
