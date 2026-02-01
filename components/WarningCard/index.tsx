@@ -19,8 +19,8 @@ const WarningCard = ({ setShowWarning }: { setShowWarning: React.Dispatch<React.
                 Warning
             </StyledText>
             <StyledText variant="normal" style={{textAlign: 'center'}}>
-                You seem to be far away from the intended area. This app is intended for walking navigation within any of
-                the University of Minnesota Twin Cities campus', and may not provide accurate directions for locations 
+                You seem to be far away from the intended area. This app is intended for walking navigation within
+                the University of Minnesota Twin Cities campus (East Bank, West Bank, St Paul), and may not provide accurate directions for locations 
                 outside of this area.
             </StyledText>
             <CustomButton
