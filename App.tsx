@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { createContext, useCallback, useRef, useState } from "react";
 import { StyleSheet, View, useColorScheme } from "react-native";
 import Home from "./app/Home";
 import { ThemeProvider } from "styled-components/native";
@@ -9,6 +9,10 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import lightTheme from "./styles/themes/light";
 import darkTheme from "./styles/themes/dark";
+import ToastHost from "./components/ToastHost";
+import AnimatedSplashScreen from "./components/SplashScreen";
+import { FadeOutDown, SlideOutDown } from "react-native-reanimated";
+import LottieView from "lottie-react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -18,10 +22,23 @@ SplashScreen.preventAutoHideAsync();
 //   fade: true,
 // });
 
+type ContextType = { setup: boolean; hideSplash: () => void };
+export const Context = createContext<ContextType>({
+  setup: false,
+  hideSplash: () => {},
+});
+
 export default function App() {
+  const lottieViewRef = useRef<LottieView | null>(null);
+  const [setup, setSetup] = useState<ContextType["setup"]>(false);
   const [fontsLoaded, fontError] = useFonts(fontObject);
   const colorScheme = useColorScheme();
   const theme = colorScheme === "dark" ? darkTheme : lightTheme;
+
+  const hideSplash: ContextType["hideSplash"] = () => {
+    lottieViewRef.current?.play();
+    setSetup(true);
+  };
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded || fontError) {
@@ -35,19 +52,30 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView style={styles.gestureRoot}>
-        <ThemeProvider theme={theme}>
-          <View
-            style={[
-              styles.container,
-              { backgroundColor: theme.colors.neutral },
-            ]}
-            onLayout={onLayoutRootView}
-          >
-            <Home />
-          </View>
-        </ThemeProvider>
-      </GestureHandlerRootView>
+      <Context.Provider value={{ setup, hideSplash }}>
+        <GestureHandlerRootView style={styles.gestureRoot}>
+          <ThemeProvider theme={theme}>
+            <View
+              style={[
+                styles.container,
+                { backgroundColor: theme.colors.neutral },
+              ]}
+              onLayout={onLayoutRootView}
+            >
+              {!setup && (
+                <AnimatedSplashScreen
+                  animatedContainerProps={{
+                    exiting: FadeOutDown.delay(800).springify(),
+                  }}
+                  ref={lottieViewRef}
+                />
+              )}
+              <Home />
+              <ToastHost />
+            </View>
+          </ThemeProvider>
+        </GestureHandlerRootView>
+      </Context.Provider>
     </SafeAreaProvider>
   );
 }

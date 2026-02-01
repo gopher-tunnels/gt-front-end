@@ -270,15 +270,15 @@ const DirectionsModal: React.FC<DirectionsModalComponentProps> = ({
     transform: [{ translateY: legendTranslation.value }],
   }));
 
-  const pointerEvents = active ? "auto" : "none";
+  const pointerEvents = active ? "box-none" : "none";
 
   return (
     <Container pointerEvents={pointerEvents} onLayout={onContainerLayout}>
-      <Animated.View style={legendAnimatedStyle}>
+      <Animated.View style={legendAnimatedStyle} pointerEvents="box-none">
         <GestureDetector gesture={pan}>
           <BottomSheetHandle />
         </GestureDetector>
-        <Content>
+        <Content pointerEvents="none">
           <StyledText variant="miniHeader">Legend</StyledText>
           <LegendContainer>
             {legendChipsData.map((props) => (
