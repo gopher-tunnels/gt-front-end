@@ -35,7 +35,7 @@ export default {
         backgroundColor: "#ffffff",
       },
       package: "com.adcumn.gophertunnels",
-      versionCode: 103,
+      versionCode: 104,
     },
     web: {
       favicon: "./assets/images/adaptive-icon.png",
