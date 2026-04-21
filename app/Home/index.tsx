@@ -41,6 +41,7 @@ import { useTheme } from "styled-components/native";
 import UserLocationIndicator from "../../components/UserLocationIndicator";
 import Banner from "../../components/Banner";
 import { Context } from "../../App";
+import TunnelFloor from "../../components/TunnelFloor";
 
 SplashScreen.preventAutoHideAsync();
 Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
@@ -569,8 +570,10 @@ const Home = () => {
             id="route-animated"
             segments={routeSegments}
             userLocation={location?.coords ?? null}
-          />
-        )}
+            />
+          )}
+          { routeSegments.length > 0 && (
+          <TunnelFloor steps={currentRoute?.steps ?? []} /> )}
         {buildings.map((building, index) => (
           <CustomMarker
             selected={building.id === destination?.id}
